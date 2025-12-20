@@ -14,6 +14,7 @@ test:
 
 # 运行测试并生成覆盖率报告
 coverage:
+	poetry run coverage run -m pytest -v
 	poetry run coverage report -m
 	poetry run coverage html
 
