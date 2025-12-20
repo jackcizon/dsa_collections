@@ -1,0 +1,25 @@
+[project]
+name = "dsa"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "jackcizon", email = "jack20021213cn@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "pytest (>=9.0.2,<10.0.0)",
+    "coverage (>=7.13.0,<8.0.0)",
+    "ruff (>=0.14.10,<0.15.0)",
+    "commitizen (>=4.10.1,<5.0.0)",
+    "pre-commit (>=4.5.1,<5.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.report]
+fail_under = 60
+show_missing = true
