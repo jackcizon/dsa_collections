@@ -37,6 +37,15 @@ class DynamicArray:
         self.items[index] = val
         self.size += 1
 
+    def append(self, val: Any) -> None:
+        self.insert(val, self.size)
+
+    def push(self, val: Any) -> None:
+        self.insert(val, 0)
+
+    def pop(self) -> None:
+        self.delete(self.size - 1)
+
     def delete(self, index: int) -> None:
         self._check_index_delete(index)
 
