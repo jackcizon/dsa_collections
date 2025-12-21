@@ -1,31 +1,29 @@
-.PHONY: all lint test coverage pre_commit commit changelog
+.PHONY: all lint format type test coverage pre_commit commit changelog
 
-# 默认任务：Lint + Test + Coverage
-all: lint test coverage pre_commit changelog
+all: lint format type test coverage pre_commit
 
-# 使用 Ruff 替代 /black/flake8/pylint
 lint:
 	poetry run ruff check algo/ ds/ tests/
+
+format:
 	poetry run ruff format algo/ ds/ tests/
 
-# 运行 pytest
-test:
-	poetry run pytest -v
+type:
+	poetry run mypy
 
-# 运行测试并生成覆盖率报告
+test:
+	poetry run pytest -q
+
 coverage:
-	poetry run coverage run -m pytest -v
+	poetry run coverage run -m pytest -q
 	poetry run coverage report -m
 	poetry run coverage html
 
-# pre-commit hook 检查
 pre_commit:
 	poetry run pre-commit run -a
 
-# 使用 Commitizen 提交
 commit:
 	cz commit
 
-# 生成 Changelog
 changelog:
 	cz changelog
