@@ -3,7 +3,7 @@ from __future__ import annotations
 
 class BinarySearch:
     @staticmethod
-    def main(arr: list, val: int | float):
+    def main(arr: list, val: int | float) -> bool:
         left: int = 0
         right: int = len(arr) - 1
 

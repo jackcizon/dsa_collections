@@ -1,28 +1,31 @@
-class DynamicArray:
-    def __init__(self, capacity: int):
-        self.capacity = capacity
-        self.size = 0
-        self.items = [None] * capacity
+from typing import Any
 
-    def is_full(self):
+
+class DynamicArray:
+    def __init__(self, capacity: int) -> None:
+        self.capacity = capacity
+        self.size: int = 0
+        self.items: list = [None] * capacity
+
+    def is_full(self) -> bool:
         return self.size == self.capacity
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         return self.size == 0
 
-    def _resize(self):
+    def _resize(self) -> None:
         self.items += [None] * self.capacity
         self.capacity *= 2
 
-    def _check_index_insert(self, index):
+    def _check_index_insert(self, index: int) -> None:
         if index < 0 or index > self.size:
             raise IndexError("Sequence index out of range.")
 
-    def _check_index_delete(self, index):
+    def _check_index_delete(self, index: int) -> None:
         if index < 0 or index > self.size - 1:
             raise IndexError("Sequence index out of range.")
 
-    def insert(self, val, index):
+    def insert(self, val: Any, index: int) -> None:
         if self.is_full():
             self._resize()
 
@@ -34,7 +37,7 @@ class DynamicArray:
         self.items[index] = val
         self.size += 1
 
-    def delete(self, index):
+    def delete(self, index: int) -> None:
         self._check_index_delete(index)
 
         for i in range(index + 1, self.size):
@@ -43,7 +46,7 @@ class DynamicArray:
         self.items[self.size - 1] = None
         self.size -= 1
 
-    def remove(self, val):
+    def remove(self, val: Any) -> bool:
         for i in range(self.size):
             if self.items[i] == val:
                 for j in range(i + 1, self.size):
@@ -54,11 +57,11 @@ class DynamicArray:
                 return True
         return False
 
-    def get(self, index):
+    def get(self, index: int) -> Any:
         self._check_index_delete(index)
         return self.items[index]
 
-    def exists(self, val):
+    def exists(self, val: Any) -> bool:
         for i in range(self.size):
             if self.items[i] == val:
                 return True
