@@ -30,6 +30,9 @@ jobs:
       - name: Ruff Format Check
         run: poetry run ruff format --check algo/ ds/ tests/
 
+      - name: mypy type check
+        run: poetry run mypy
+
       - name: Run tests with coverage
         run: |
           poetry run coverage run -m pytest -v
