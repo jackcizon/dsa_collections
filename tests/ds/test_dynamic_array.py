@@ -170,3 +170,11 @@ def test_check_index_insert():
 
     with pytest.raises(IndexError):
         arr.insert(val=10000, index=-1)
+
+
+def test_iter():
+    arr = DynamicArray(1)
+    arr.append(10)
+    arr.append(9)
+    arr.append(8)
+    print(list(arr))
