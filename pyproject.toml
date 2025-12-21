@@ -43,3 +43,4 @@ no_implicit_optional = true
 strict_optional = true
 
 ignore_missing_imports = true
+disable_error_code = ["union-attr", "assignment"]

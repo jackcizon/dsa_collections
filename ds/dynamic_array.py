@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Iterator
 
 
 class DynamicArray:
@@ -75,3 +75,8 @@ class DynamicArray:
             if self.items[i] == val:
                 return True
         return False
+
+    def __iter__(self) -> Iterator:
+        for val in self.items:
+            if val:
+                yield val
