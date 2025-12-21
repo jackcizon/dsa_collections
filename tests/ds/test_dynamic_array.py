@@ -145,3 +145,28 @@ def test_repeated_delete_front():
 def test_is_empty():
     arr = DynamicArray(1)
     assert arr.is_empty() is True
+
+
+def test_append_push_pop():
+    arr = DynamicArray(1)
+    arr.append(10)
+    arr.append(9)
+    arr.append(8)
+    arr.push(11)
+    arr.pop()
+
+    assert arr.items[0] == 11
+    assert arr.items[arr.size - 1] == 9
+
+
+def test_check_index_insert():
+    arr = DynamicArray(1)
+    arr.append(10)
+    arr.append(9)
+    arr.append(8)
+
+    with pytest.raises(IndexError):
+        arr.insert(val=100, index=100)
+
+    with pytest.raises(IndexError):
+        arr.insert(val=10000, index=-1)
