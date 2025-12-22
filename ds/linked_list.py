@@ -125,3 +125,63 @@ class DoubleLinkedList:
         while curr is not self._tail:
             yield curr.value
             curr = curr.next
+
+
+class DoubleCircledLinkedList:
+    """double circled linked list with sentinel node"""
+
+    @dataclass(repr=False)
+    class _Node:
+        value: Any = None
+        prev: Optional["DoubleCircledLinkedList._Node"] = None
+        next: Optional["DoubleCircledLinkedList._Node"] = None
+
+    def __init__(self) -> None:
+        self._head = self._Node(value="__sentinel__")
+        self._head.prev = self._head
+        self._head.next = self._head
+
+    def insert(self) -> None:
+        raise NotImplementedError("insert() method is no practical usage")
+
+    def delete(self) -> None:
+        raise NotImplementedError("delete() method is no practical usage")
+
+    def is_empty(self) -> bool:
+        return self._head.next == self._head
+
+    def push(self, val: Any) -> None:
+        head_next = self._head.next
+        new_node = self._Node(value=val, prev=self._head, next=head_next)
+        head_next.prev = new_node
+        self._head.next = new_node
+
+    def append(self, val: Any) -> None:
+        tail = self._head.prev
+        new_node = self._Node(value=val, prev=tail, next=self._head)
+        tail.next = new_node
+        self._head.prev = new_node
+
+    def pop(self) -> Any:
+        if self.is_empty():
+            return None
+        del_tail = self._head.prev
+        tail_prev = del_tail.prev
+        tail_prev.next = self._head
+        self._head.prev = tail_prev
+        return del_tail.value
+
+    def pop_front(self) -> Any:
+        if self.is_empty():
+            return None
+        del_front = self._head.next
+        front_next = del_front.next
+        front_next.prev = self._head
+        self._head.next = front_next
+        return del_front.value
+
+    def __iter__(self) -> Iterator:
+        curr = self._head.next
+        while curr is not self._head:
+            yield curr.value
+            curr = curr.next
