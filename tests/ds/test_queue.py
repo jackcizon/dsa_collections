@@ -45,8 +45,8 @@ def test_standard_queue():
         print("dequeued: ", list(queue))
 
     queue2 = StandardQueue(-1)
-    queue3 = StandardQueue(2 ** 100)
+    queue3 = StandardQueue(2**100)
 
     assert queue2.size() == 0
     assert queue2.capacity() == 2
-    assert queue3.capacity() == 2 ** 10
+    assert queue3.capacity() == 2**10
