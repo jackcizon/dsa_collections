@@ -1,4 +1,4 @@
 src = ["algo", "ds", "tests"]
-line-length = 128
+line-length = 100
 target-version = "py312"
 lint.ignore = ["F401", "F403", "E402"]
