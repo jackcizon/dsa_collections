@@ -32,7 +32,9 @@ def _pascal_triangle_element_recursion(row: int, col: int) -> int:
     """return triangle element recursively"""
     if row == col or col == 0:
         return 1
-    return _pascal_triangle_element_recursion(row - 1, col) + _pascal_triangle_element_recursion(row - 1, col - 1)
+    return _pascal_triangle_element_recursion(row - 1, col) + _pascal_triangle_element_recursion(
+        row - 1, col - 1
+    )
 
 
 def pascal_triangle_iteration(rows: int) -> None:
