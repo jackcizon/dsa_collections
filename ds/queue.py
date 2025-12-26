@@ -113,3 +113,71 @@ class StandardQueue:
             # print(self._buffer[front])
             front = (front + 1) & (self._capacity - 1)
             size -= 1
+
+
+class DoubleEndsQueue:
+    def __init__(self, exp2_len: int) -> None:
+        if exp2_len < 1:
+            exp2_len = 1
+        if exp2_len > 10:
+            exp2_len = 10
+        self._capacity = 2**exp2_len
+        self._size = 0
+        self._front = 0
+        self._rear = 0
+        self._buffer = [None] * self._capacity
+
+    def size(self) -> int:
+        return self._size
+
+    def capacity(self) -> int:
+        return self._capacity
+
+    def push_back(self, val: Any) -> bool:
+        """enqueue() in StandardQueue"""
+        if self.is_full():
+            return False
+        self._buffer[self._rear] = val
+        self._rear = (self._rear + 1) & (self._capacity - 1)
+        self._size += 1
+        return True
+
+    def push_front(self, val: Any) -> bool:
+        """reverse push_back() code logic, symmetrical to pop_back()"""
+        if self.is_full():
+            return False
+        self._front = (self._front - 1 + self._capacity) & (self._capacity - 1)
+        self._buffer[self._front] = val
+        self._size += 1
+        return True
+
+    def pop_front(self) -> Any:
+        """dequeue() in StandardQueue"""
+        if self.is_empty():
+            return None
+        val = self._buffer[self._front]
+        self._front = (self._front + 1) & (self._capacity - 1)
+        self._size -= 1
+        return val
+
+    def pop_back(self) -> Any:
+        """reverse pop_front() code logic, symmetrical to push_front()"""
+        if self.is_empty():
+            return None
+        self._rear = (self._rear - 1 + self._capacity) & (self._capacity - 1)
+        val = self._buffer[self._rear]
+        self._size -= 1
+        return val
+
+    def is_full(self) -> bool:
+        return self._size == self._capacity
+
+    def is_empty(self) -> bool:
+        return self._size == 0
+
+    def __iter__(self) -> Iterator:
+        """fake dequeue to iter"""
+        front = self._front
+        for _ in range(self._size):
+            yield self._buffer[front]
+            front = (front + 1) & (self._capacity - 1)
