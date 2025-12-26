@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from ds.queue import BaseQueue, StandardQueue
+from ds.queue import BaseQueue, StandardQueue, DoubleEndsQueue
 
 
 def test_base_queue():
@@ -50,3 +50,35 @@ def test_standard_queue():
     assert queue2.size() == 0
     assert queue2.capacity() == 2
     assert queue3.capacity() == 2**10
+
+
+def test_double_ends_queue():
+    assert DoubleEndsQueue(-1).capacity() == 2
+    assert DoubleEndsQueue(100).capacity() == 2**10
+
+    queue = DoubleEndsQueue(2)
+    assert queue.is_empty() is True
+    assert queue.is_full() is False
+    assert queue.size() == 0
+
+    queue.push_back("hello")
+    queue.push_back("world")
+    queue.push_front("hi,")
+    queue.push_front("I'm")
+
+    print(list(queue))
+
+    assert queue.push_front("invalid") is False
+    assert queue.push_back("invalid") is False
+
+    assert queue.is_full() is True
+    assert queue.is_empty() is False
+
+    while not queue.is_empty():
+        queue.pop_front()
+        queue.pop_back()
+
+    assert queue.pop_back() is None
+    assert queue.pop_front() is None
+
+    print(list(queue))
