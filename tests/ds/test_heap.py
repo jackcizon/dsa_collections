@@ -1,3 +1,6 @@
+import pytest
+
+from ds.examples.heap_example import kth_largest
 from ds.heap import MaxHeap
 
 
@@ -47,3 +50,10 @@ def test_max_heap():
 
     while not heap2.is_empty():
         print(heap2.pop(), end=" ")  # 按顺序 pop 出 10 8 6 5 3 1
+
+
+def test_kth_largest():
+    arr = [1, 2, 3, 4, 5, 6, 7]
+    with pytest.raises(ValueError):
+        kth_largest(arr, -1)
+    assert kth_largest(arr, 3) == 5
