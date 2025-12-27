@@ -1,6 +1,12 @@
 from pprint import pprint
 
-from ds.queue import BaseQueue, StandardQueue, DoubleEndsQueue
+from ds.queue import (
+    BaseQueue,
+    StandardQueue,
+    DoubleEndsQueue,
+    UnorderedArrayPriorityQueue,
+    OrderArrayPriorityQueue,
+)
 
 
 def test_base_queue():
@@ -82,3 +88,41 @@ def test_double_ends_queue():
     assert queue.pop_front() is None
 
     print(list(queue))
+
+
+def test_array_pq():
+    pq1 = UnorderedArrayPriorityQueue(2)
+
+    assert pq1.is_empty() is True
+    assert pq1.dequeue() is None
+    assert pq1.top() is None
+
+    i = 0
+    while not pq1.is_full():
+        pq1.enqueue(i)
+        i += 1
+    pq1.enqueue(100)
+    print(list(pq1))
+
+    assert pq1.top() == 1
+    assert pq1.is_full() is True
+    assert pq1.dequeue() == 1
+    assert pq1.dequeue() == 0
+
+    pq1 = OrderArrayPriorityQueue(2)
+
+    assert pq1.is_empty() is True
+    assert pq1.dequeue() is None
+    assert pq1.top() is None
+
+    i = 1
+    while not pq1.is_full():
+        pq1.enqueue(i)
+        i -= 1
+    pq1.enqueue(100)
+    print(list(pq1))
+
+    assert pq1.top() == 1
+    assert pq1.is_full() is True
+    assert pq1.dequeue() == 1
+    assert pq1.dequeue() == 0

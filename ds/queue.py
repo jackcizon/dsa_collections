@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Any, Optional, Iterator
 
@@ -181,3 +183,87 @@ class DoubleEndsQueue:
         for _ in range(self._size):
             yield self._buffer[front]
             front = (front + 1) & (self._capacity - 1)
+
+
+class UnorderedArrayPriorityQueue:
+    """implement PQ by unordered array, not recommend"""
+
+    def __init__(self, capacity: int) -> None:
+        self._buffer: list[Any] = []
+        self._size = 0
+        self._capacity = capacity
+
+    def enqueue(self, val: Any) -> bool:
+        if self.is_full():
+            return False
+        self._buffer.append(val)
+        self._size += 1
+        return True
+
+    def dequeue(self) -> Any:
+        if self.is_empty():
+            return None
+        max_index = 0
+        for i in range(1, self._size):
+            if self._buffer[i] > self._buffer[max_index]:
+                max_index = i
+        val = self._buffer[max_index]
+        self._buffer[max_index] = self._buffer[self._size - 1]  # copy
+        self._buffer.pop()
+        self._size -= 1
+        return val
+
+    def top(self) -> Any:
+        if self.is_empty():
+            return None
+        return max(self._buffer[: self._size])
+
+    def is_empty(self) -> bool:
+        return self._size == 0
+
+    def is_full(self) -> bool:
+        return self._size == self._capacity
+
+    def __iter__(self) -> Iterator:
+        for i in range(self._size):
+            yield self._buffer[i]
+
+
+class OrderArrayPriorityQueue:
+    """implement PQ by ordered array, not recommend"""
+
+    def __init__(self, capacity: int) -> None:
+        self._capacity = capacity
+        self._size = 0
+        self._buffer: Any = []
+
+    def enqueue(self, val: Any) -> bool:
+        if self.is_full():
+            return False
+        i = 0
+        while i < self._size and self._buffer[i] > val:
+            i += 1
+        self._buffer.insert(i, val)
+        self._size += 1
+        return True
+
+    def dequeue(self) -> Any:
+        if self.is_empty():
+            return None
+        self._size -= 1
+        return self._buffer.pop(0)
+
+    def top(self) -> Any:
+        if self.is_empty():
+            return None
+        return self._buffer[0]
+
+    def is_full(self) -> bool:
+        return self._size == self._capacity
+
+    def is_empty(self) -> bool:
+        return self._size == 0
+
+    def __iter__(self) -> Iterator:
+        for i in range(self._size):
+            yield self._buffer[i]
