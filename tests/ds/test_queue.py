@@ -6,6 +6,7 @@ from ds.queue import (
     DoubleEndsQueue,
     UnorderedArrayPriorityQueue,
     OrderArrayPriorityQueue,
+    PriorityQueue,
 )
 
 
@@ -126,3 +127,38 @@ def test_array_pq():
     assert pq1.is_full() is True
     assert pq1.dequeue() == 1
     assert pq1.dequeue() == 0
+
+
+def test_max_heap():
+    pq = PriorityQueue(capacity=10)
+
+    assert pq.top() is None
+
+    # 测试 push
+    print("=== Push ===")
+    for val in [5, 3, 8, 1, 6]:
+        pq.enqueue(val)
+
+    print(list(pq))
+
+    # 测试 top
+    print("\n=== Top ===")
+    print(f"Current top: {pq.top()}")  # 应该是 8
+
+    # 测试 pop
+    print("\n=== Pop ===")
+    while not pq.is_empty():
+        pq.dequeue()
+
+    # 测试 pop 空堆
+    print("\n=== Pop empty ===")
+    print(pq.dequeue())  # None
+
+    # 测试 push 到满堆
+    print("\n=== Push to full ===")
+    for val in range(1, 12):
+        pq.enqueue(val)
+
+    # 检查 top
+    print("\n=== Final Top ===")
+    print(pq.top())  # 应该是 10
