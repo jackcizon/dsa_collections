@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Optional, Iterator
 
+from ds.heap import MaxHeap
+
 
 class BaseQueue:
     """basic queue implemented by simgle circled linked list"""
@@ -267,3 +269,17 @@ class OrderArrayPriorityQueue:
     def __iter__(self) -> Iterator:
         for i in range(self._size):
             yield self._buffer[i]
+
+
+class PriorityQueue(MaxHeap):
+    def __init__(self, capacity: int) -> None:
+        super().__init__()
+        self._capacity = capacity
+        self._heap = []
+        self._size = 0
+
+    def enqueue(self, val: Any) -> bool:
+        return self.push(val)
+
+    def dequeue(self) -> Any:
+        return self.pop()
