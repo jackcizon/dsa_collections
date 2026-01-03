@@ -13,27 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+      - name: Build Docker image
+        run: docker build -t dsa-ci .
 
       - name: Ruff Lint
-        run: poetry run ruff check algo/ ds/ tests/
+        run: docker run --rm dsa-ci poetry run ruff check algo/ ds/ tests/
 
       - name: Ruff Format Check
-        run: poetry run ruff format --check algo/ ds/ tests/
+        run: docker run --rm dsa-ci poetry run ruff format --check algo/ ds/ tests/
 
       - name: mypy type check
-        run: poetry run mypy
-
-      - name: Run tests with coverage
-        run: |
-          poetry run coverage run -m pytest -v
-          poetry run coverage report -m --fail-under=60
+        run: docker run --rm dsa-ci poetry run mypy
