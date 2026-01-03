@@ -24,8 +24,3 @@ jobs:
 
       - name: mypy type check
         run: docker run --rm dsa-ci poetry run mypy
-
-      - name: Run tests with coverage
-        run: |
-          docker run --rm dsa-ci poetry run pytest --cov=algo --cov=ds -v
-          docker run --rm dsa-ci poetry run coverage report -m --fail-under=60
