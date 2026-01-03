@@ -11,7 +11,7 @@ RUN poetry config virtualenvs.create false
 # 先复制依赖文件，利用缓存
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry install --no-interaction --no-root
+RUN poetry install --no-interaction --no-root  --with dev
 
 # 再复制代码
 COPY . .
