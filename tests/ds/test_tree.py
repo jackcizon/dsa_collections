@@ -6,6 +6,7 @@ def test_binary_search_tree():
 
     assert tree.delete(1) is True
     assert tree.delete(1) is False
+    assert tree.height() == 0
     tree.create_or_update(1, 1)
     tree.create_or_update(1, 1)
     assert tree.delete(1) is True
@@ -48,6 +49,7 @@ def test_binary_search_tree():
     assert tree.max().key == 9
     assert tree.min().key == 1
     assert tree.get(9) == 9
+    assert tree.height() == 5
 
     assert tree.delete(100000) is False  # del none exists node
     assert tree.delete(8.5) is True  # del leaf

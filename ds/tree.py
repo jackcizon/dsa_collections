@@ -314,3 +314,11 @@ class BinarySearchTree:
         self._shift(parent=parent, deleted=deleted, child=successor)
         successor.left = deleted.left
         return True
+
+    def height(self) -> int:
+        return self._height_recursion(self._root)
+
+    def _height_recursion(self, node: Optional["_TreeNode"]) -> int:
+        if node is None:
+            return 0
+        return 1 + max(self._height_recursion(node.left), self._height_recursion(node.right))
