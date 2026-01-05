@@ -28,7 +28,7 @@ def test_binary_search_tree():
     tree.insert(8.5, {})
 
     tree.create_or_update(key=8.5, data=8.5)
-    assert tree.get(key=8.5) == 8.5
+    assert tree.get(key=8.5).key == 8.5
 
     assert tree.predecessor(1) is None
     assert tree.predecessor(1) is None
@@ -48,7 +48,7 @@ def test_binary_search_tree():
     assert tree.is_empty() is False
     assert tree.max().key == 9
     assert tree.min().key == 1
-    assert tree.get(9) == 9
+    assert tree.get(9).key == 9
     assert tree.height() == 5
 
     assert tree.delete(100000) is False  # del none exists node

@@ -27,7 +27,7 @@ class BinaryTree:
             elif key > curr.key:
                 curr = curr.right
             else:
-                return curr.data
+                return curr
         return None
 
 
