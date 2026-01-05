@@ -16,7 +16,7 @@ class BinaryTree:
     def is_empty(self) -> bool:
         return self._root is None
 
-    def get(self, key: float) -> Optional["_TreeNode"]:
+    def get(self, key: float) -> Optional["BinaryTree._TreeNode"]:
         if self.is_empty():
             return None
 
@@ -44,11 +44,13 @@ class BinarySearchTree(BinaryTree):
         super().__init__(key, data)
         self._root: Optional["BinarySearchTree._TreeNode"] = self._TreeNode(key=key, data=data)
 
-    def min(self) -> Optional["_TreeNode"]:
+    def min(self) -> Optional["BinarySearchTree._TreeNode"]:
         """return leftmost node"""
         return self._min(self._root)
 
-    def _min(self, node: Optional["_TreeNode"]) -> Optional["_TreeNode"]:
+    def _min(
+        self, node: Optional["BinarySearchTree._TreeNode"]
+    ) -> Optional["BinarySearchTree._TreeNode"]:
         if self.is_empty():
             return None
 
@@ -56,11 +58,11 @@ class BinarySearchTree(BinaryTree):
             node = node.left
         return node
 
-    def max(self) -> Any:
+    def max(self) -> Optional["BinarySearchTree._TreeNode"]:
         """return rightmost node"""
         return self._max(self._root)
 
-    def _max(self, node: Optional["_TreeNode"]) -> Any:
+    def _max(self, node: Optional["BinarySearchTree._TreeNode"]) -> Any:
         if self.is_empty():
             return None
 
@@ -114,7 +116,9 @@ class BinarySearchTree(BinaryTree):
     def inorder_recursion(self) -> list:
         return self._inorder_recursion(self._root, [])
 
-    def _inorder_recursion(self, root: Optional["_TreeNode"], result: list) -> list:
+    def _inorder_recursion(
+        self, root: Optional["BinarySearchTree._TreeNode"], result: list
+    ) -> list:
         """left, root, right"""
         if root is None:
             return []
@@ -197,7 +201,7 @@ class BinarySearchTree(BinaryTree):
             parent.right = node
         return True
 
-    def predecessor(self, key: float) -> Optional["_TreeNode"]:
+    def predecessor(self, key: float) -> Optional["BinarySearchTree._TreeNode"]:
         """
         1. left child tree -> max(curr.left)
                 or
@@ -222,7 +226,7 @@ class BinarySearchTree(BinaryTree):
             return self._max(curr.left)
         return ancestor_from_left
 
-    def successor(self, key: float) -> Optional["_TreeNode"]:
+    def successor(self, key: float) -> Optional["BinarySearchTree._TreeNode"]:
         """
         1. right child tree -> min(curr.right)
                 or
@@ -251,13 +255,16 @@ class BinarySearchTree(BinaryTree):
             return self._min(curr.right)
         return ancestor_from_right
 
-    def _is_leaf(self, node: Optional["_TreeNode"]) -> bool:
+    def _is_leaf(self, node: Optional["BinarySearchTree._TreeNode"]) -> bool:
         if self.is_empty():
             return False
         return node.left is None and node.right is None
 
     def _shift(
-        self, parent: Optional["_TreeNode"], deleted: "_TreeNode", child: Optional["_TreeNode"]
+        self,
+        parent: Optional["BinarySearchTree._TreeNode"],
+        deleted: "BinarySearchTree._TreeNode",
+        child: Optional["BinarySearchTree._TreeNode"],
     ) -> None:
         if parent is None:
             self._root = child
@@ -332,7 +339,7 @@ class BinarySearchTree(BinaryTree):
     def height(self) -> int:
         return self._height_recursion(self._root)
 
-    def _height_recursion(self, node: Optional["_TreeNode"]) -> int:
+    def _height_recursion(self, node: Optional["BinarySearchTree._TreeNode"]) -> int:
         if node is None:
             return 0
         return 1 + max(self._height_recursion(node.left), self._height_recursion(node.right))
