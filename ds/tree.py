@@ -2,16 +2,19 @@ from dataclasses import dataclass
 from typing import Any, Optional, Iterator
 
 
-class BinarySearchTree:
+class BinaryTree:
     @dataclass(repr=False)
     class _TreeNode:
         key: float
         data: Any
-        left: Optional["BinarySearchTree._TreeNode"] = None
-        right: Optional["BinarySearchTree._TreeNode"] = None
+        left: Optional["BinaryTree._TreeNode"] = None
+        right: Optional["BinaryTree._TreeNode"] = None
 
     def __init__(self, key: float, data: Any) -> None:
         self._root = self._TreeNode(key=key, data=data, left=None, right=None)
+
+    def is_empty(self) -> bool:
+        return self._root is None
 
     def get(self, key: float) -> Optional["_TreeNode"]:
         if self.is_empty():
@@ -26,6 +29,20 @@ class BinarySearchTree:
             else:
                 return curr.data
         return None
+
+
+class BinarySearchTree(BinaryTree):
+    @dataclass(repr=False)
+    class _TreeNode(BinaryTree._TreeNode):
+        left: Optional["BinarySearchTree._TreeNode"] = None
+        right: Optional["BinarySearchTree._TreeNode"] = None
+
+    def __init__(self, key: float, data: Any = None) -> None:
+        # super().__init__(key=key, data=data)
+        # it will cause incompatible type "ds.tree.BinaryTree._TreeNode";
+        # expected "ds.tree.BinarySearchTree._TreeNode | None"
+        super().__init__(key, data)
+        self._root: Optional["BinarySearchTree._TreeNode"] = self._TreeNode(key=key, data=data)
 
     def min(self) -> Optional["_TreeNode"]:
         """return leftmost node"""
@@ -50,9 +67,6 @@ class BinarySearchTree:
         while node.right:
             node = node.right
         return node
-
-    def is_empty(self) -> bool:
-        return self._root is None
 
     def __iter__(self) -> Iterator:
         stack: list["BinarySearchTree._TreeNode"] = []
@@ -322,3 +336,27 @@ class BinarySearchTree:
         if node is None:
             return 0
         return 1 + max(self._height_recursion(node.left), self._height_recursion(node.right))
+
+
+class AVLTree(BinaryTree):
+    """self balanced binary search tree"""
+
+    @dataclass(repr=False)
+    class _TreeNode(BinaryTree._TreeNode):
+        height: int = 1
+        left: Optional["AVLTree._TreeNode"] = None
+        right: Optional["AVLTree._TreeNode"] = None
+
+    def __init__(self, key: float, data: Any) -> None:
+        super().__init__(key, data)
+        self._root: Optional["AVLTree._TreeNode"] = self._TreeNode(key=key, data=data)
+
+    # def insert(self, key: float, data: Any) -> bool: ...
+    #
+    # def delete(self, key: float) -> bool: ...
+    #
+    # def __iter__(self) -> Iterator: ...
+
+
+class RBTree(BinaryTree):
+    pass

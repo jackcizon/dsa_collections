@@ -1,4 +1,4 @@
-from ds.tree import BinarySearchTree
+from ds.tree import BinarySearchTree, AVLTree
 
 
 def test_binary_search_tree():
@@ -79,3 +79,8 @@ def test_binary_search_tree():
     tree1.delete(2)
     tree1.delete(0)
     assert tree1._is_leaf(tree1._root) is False
+
+
+def test_avl_tree():
+    tree = AVLTree(key=1, data=1)
+    print(tree)
