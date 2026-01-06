@@ -81,6 +81,78 @@ def test_binary_search_tree():
     assert tree1._is_leaf(tree1._root) is False
 
 
-def test_avl_tree():
-    tree = AVLTree(key=1, data=1)
-    print(tree)
+def test_avl_tree_rotations_simple():
+    # 初始化 AVL 树
+    tree = AVLTree(key=10, data=10)  # data = key
+
+    tree.delete(10)
+    tree.delete(1000)
+
+    tree.insert_or_update(key=10, data=0)
+    tree.insert_or_update(key=10, data=10)
+
+    # ---------------------
+    # 插入触发各种旋转
+    # ---------------------
+
+    # LL case: 左左旋（右旋）
+    tree.insert_or_update(5, 5)
+    tree.insert_or_update(2, 2)  # 插入左左 → 右旋
+    values = list(tree)
+    assert values == [2, 5, 10]
+
+    # RR case: 右右旋（左旋）
+    tree.insert_or_update(15, 15)
+    tree.insert_or_update(20, 20)  # 插入右右 → 左旋
+    values = list(tree)
+    assert values == [2, 5, 10, 15, 20]
+
+    # LR case: 左右旋（左旋 + 右旋）
+    tree.insert_or_update(4, 4)  # 插入 4 → LR
+    values = list(tree)
+    assert values == [2, 4, 5, 10, 15, 20]
+
+    # RL case: 右左旋（右旋 + 左旋）
+    tree.insert_or_update(17, 17)  # 插入 17 → RL
+    values = list(tree)
+    assert values == [2, 4, 5, 10, 15, 17, 20]
+
+    # ---------------------
+    # 删除触发旋转
+    # ---------------------
+
+    # 删除叶子和中间节点，可能触发旋转
+    tree.delete(20)  # 删除右右叶子节点
+    tree.delete(2)  # 删除左左叶子节点
+    tree.delete(17)  # 删除右左节点
+    tree.delete(4)  # 删除左右节点
+
+    # 最后中序遍历应该剩下 [5,10,15]
+    values = list(tree)
+    assert values == [5, 10, 15]
+
+    ##############################################
+    # test some lines that are hard to trigger
+    ##############################################
+
+    # test _left_right_rotate()
+    tree2 = AVLTree(6)
+    tree2.insert_or_update(2)
+    tree2.insert_or_update(7)
+    tree2.insert_or_update(1)
+    tree2.insert_or_update(4)
+    tree2.insert_or_update(9)  # del this node will trigger LR
+    tree2.insert_or_update(3)
+    tree2.insert_or_update(5)
+    tree2.delete(9)
+
+    # test _get_min_node()
+    tree3 = AVLTree(4)  # del this node
+    tree3.insert_or_update(2)
+    tree3.insert_or_update(6)  # node.right
+    tree3.insert_or_update(1)
+    tree3.insert_or_update(3)
+    tree3.insert_or_update(5)  # successor of 4
+    tree3.insert_or_update(7)
+    tree3.insert_or_update(5.5)
+    tree3.delete(4)

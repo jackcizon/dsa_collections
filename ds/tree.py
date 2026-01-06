@@ -354,15 +354,218 @@ class AVLTree(BinaryTree):
         left: Optional["AVLTree._TreeNode"] = None
         right: Optional["AVLTree._TreeNode"] = None
 
-    def __init__(self, key: float, data: Any) -> None:
+    def __init__(self, key: float, data: Any = None) -> None:
         super().__init__(key, data)
-        self._root: Optional["AVLTree._TreeNode"] = self._TreeNode(key=key, data=data)
+        self._root: Optional[AVLTree._TreeNode] = self._TreeNode(key=key, data=data)
 
-    # def insert(self, key: float, data: Any) -> bool: ...
-    #
-    # def delete(self, key: float) -> bool: ...
-    #
-    # def __iter__(self) -> Iterator: ...
+    @staticmethod
+    def _height(node: Optional[_TreeNode]) -> int:
+        if node is None:
+            return 0
+        return node.height
+
+    def _update_height(self, node: Optional[_TreeNode]) -> None:
+        node.height = 1 + max(self._height(node.left), self._height(node.right))
+
+    def _balance_factor(self, node: Optional[_TreeNode]) -> int:
+        return self._height(node.left) - self._height(node.right)
+
+    def _left_rotate(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        r"""
+        left-rotate the node and related node:
+            its right child becomes the new root of this subtree,
+            and the node becomes the left child of the new root.
+        in the case of left rotation, the tree is right-leaning.
+
+        e.g.:
+               5
+             /   \
+            3     6
+           / \     \
+          2   4    (7) <- (delete(7) causes violation)
+         /
+        1
+               5
+             /   \
+            3     6
+           / \
+          2   4
+         /
+        (1) <- (insert(1) causes violation)
+        """
+        if node is None or node.right is None:
+            return node  # can't rotate
+
+        right_child = node.right
+        right_child_left = right_child.left
+        # rotate
+        node.right = right_child_left
+        right_child.left = node
+        # update height
+        self._update_height(node)
+        self._update_height(right_child)
+        # other methods need the new root to maintain avl-tree invariant
+        return right_child
+
+    def _right_rotate(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        """
+        it's symmetrical to left rotate.
+        in the case of right rotation, the tree is left-leaning.
+
+        e.g.:
+            mirror of left_rotate()
+        """
+        # normal tests cannot cover this guard, because delete() logic
+        if node is None or node.left is None:  # pragma: no cover
+            return node
+
+        left_child = node.left
+        left_child_right = left_child.right
+        node.left = left_child_right
+        left_child.right = node
+        self._update_height(node)
+        self._update_height(left_child)
+        return left_child
+
+    def _left_right_rotate(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        r"""
+        perform a left rotation on node's left, followed by a right rotation on node.
+        returns the new root of the subtree.
+
+        e.g.:
+               6
+             /   \
+            2     7
+           / \     \
+          1   4    (9) <- (delete(9) causes violation)
+             / \
+            3   5
+        """
+        node.left = self._left_rotate(node.left)
+        return self._right_rotate(node)
+
+    def _right_left_rotate(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        """
+        it's symmetrical to left right rotate.
+        perform a left rotation on node's left, followed by a right rotation on node.
+        returns the new root of the subtree.
+
+        e.g.:
+            mirror of left_right_rotate()
+        """
+        node.right = self._left_rotate(node.right)
+        return self._left_rotate(node)
+
+    def _balance(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        """
+        helper method to maintain avl-tree invariant after insertion and deletion.
+
+        if the subtree is already balanced, the original node is returned.
+        if rotations are required, returns the new root of this subtree.
+        """
+        # defensive guard that will not happen in normal situations
+        if node is None:  # pragma: no cover
+            return None
+        bf = self._balance_factor(node)
+
+        # 1. Left-Left:
+        # height(z.left) - height(z.right) = 2, bf = 2
+        # height(z.left.left) >= height(z.left.right), bf >= 0
+        # aka LL
+        if bf > 1 and self._balance_factor(node.left) >= 0:
+            return self._right_rotate(node)
+        # 2. LR
+        # the complement of case 1
+        elif bf > 1 and self._balance_factor(node.left) < 0:
+            return self._left_right_rotate(node)
+        # 3. Right-Right
+        # height(z.right) - height(z.left) = 2, bf = -2
+        # height(z.right.right) >= height(z.right.left), bf <= 0
+        # aka RR
+        elif bf < -1 and self._balance_factor(node.right) <= 0:
+            return self._left_rotate(node)
+        # 4. RL
+        # the complement of case 3
+        elif bf < -1 and self._balance_factor(node.right) > 0:
+            return self._right_left_rotate(node)
+
+        return node
+
+    def insert_or_update(self, key: float, data: Any = None) -> None:
+        """insert new node or update if exists"""
+        self._root = self._insert_recursion(node=self._root, key=key, data=data)
+
+    def _insert_recursion(
+        self, node: Optional[_TreeNode], key: float, data: Any
+    ) -> Optional[_TreeNode]:
+        """inner method, insert recursively"""
+        # empty avl-tree
+        if node is None:
+            return self._TreeNode(key=key, data=data)
+
+        # key exists, update node data
+        if key == node.key:
+            node.data = data
+            return node
+
+        # key not found, insert recursively
+        if key < node.key:
+            node.left = self._insert_recursion(node=node.left, key=key, data=data)
+        else:
+            node.right = self._insert_recursion(node=node.right, key=key, data=data)
+
+        # update nodes height, maintain avl-tree invariant
+        self._update_height(node)
+        return self._balance(node)
+
+    @staticmethod
+    def _get_min_node(node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        while node.left is not None:
+            node = node.left
+        return node
+
+    def delete(self, key: float) -> None:
+        self._root = self._delete_recursion(node=self._root, key=key)
+
+    def _delete_recursion(self, node: Optional[_TreeNode], key: float) -> Optional[_TreeNode]:
+        # empty avl-tree
+        if node is None:
+            return None
+
+        # delete recursively
+        if key < node.key:
+            node.left = self._delete_recursion(node=node.left, key=key)
+        elif key > node.key:
+            node.right = self._delete_recursion(node=node.right, key=key)
+        else:
+            # key found
+            if node.left is None:
+                return node.right  # 0/1 child
+            elif node.right is None:
+                return node.left  # 1 child
+            else:
+                # 2 children, find successor(min in right subtree)
+                successor = self._get_min_node(node.right)
+                # copy data
+                node.key = successor.key
+                node.right = self._delete_recursion(node=node.right, key=successor.key)
+
+        # update nodes height, maintain avl-tree invariant
+        self._update_height(node)
+        return self._balance(node)
+
+    def __iter__(self) -> Iterator:
+        stack: list[AVLTree._TreeNode] = []
+        curr = self._root
+
+        while curr or stack:
+            while curr:
+                stack.append(curr)
+                curr = curr.left
+
+            curr = stack.pop()
+            yield curr.data
+            curr = curr.right
 
 
 class RBTree(BinaryTree):
