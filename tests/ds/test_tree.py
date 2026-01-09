@@ -1,4 +1,4 @@
-from ds.tree import BinarySearchTree, AVLTree
+from ds.tree import BinarySearchTree, AVLTree, RBTree
 
 
 def test_binary_search_tree():
@@ -156,3 +156,69 @@ def test_avl_tree_rotations_simple():
     tree3.insert_or_update(7)
     tree3.insert_or_update(5.5)
     tree3.delete(4)
+
+
+def test_rb_tree():
+    # insert
+    r"""
+    case 0: root
+    15(black)
+    """
+    tree1 = RBTree()
+    tree1.insert_or_update(15)
+
+    r"""
+    case 3:
+    node.uncle = black(line)
+    rotate(node.grandpa)
+    recolor parent and grandpa
+            15(black)                                  5(b)
+           /       \                   fix_up         /   \
+          5(red)    nil <- uncle      -------->     1(r) 15(r)
+         /                             recolor
+        1 <- insert
+    """
+    tree2 = RBTree()
+    tree2.insert_or_update(15)
+    tree2.insert_or_update(5)
+    tree2.insert_or_update(1)
+
+    r"""
+    case 1:
+    node.uncle = red
+    recolor parent, grandpa and uncle
+    iteration node.grandpa
+             |                                      |
+            12(b)                                 12(r)
+            /   \               recolor           /   \
+          9(r) 13(r)          ---------->        9(b) 13(b) 
+           \                                      \
+           10(r)                                  10(r)  
+    """
+    tree3 = RBTree()
+    tree3.insert_or_update(12)
+    tree3.insert_or_update(9)
+    tree3.insert_or_update(13)
+    tree3.insert_or_update(10)
+
+    r"""
+    case 2:
+    triangle
+    node.uncle = black
+    rotate node.parent
+                     8(b)       \
+                   /      \      \
+         uncle -> 5(b)   15(r)   /
+                         /      /
+              node ->  12(r)   /
+    """
+    tree4 = RBTree()
+    tree4.insert_or_update(8)
+    tree4.insert_or_update(5)
+    tree4.insert_or_update(15)
+    tree4.insert_or_update(12)
+    tree4.insert_or_update(19)
+    tree4.insert_or_update(9)
+    tree4.insert_or_update(13)
+    tree4.insert_or_update(23)
+    tree4.insert_or_update(10)
