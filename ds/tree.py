@@ -566,5 +566,337 @@ class AVLTree(BinaryTree):
             curr = curr.right
 
 
-class RBTree(BinaryTree):
-    pass
+class RBTree:
+    """
+    RB-tree is a self-balanced BST inspired by AVL-tree and B-tree,
+    using red and black nodes to maintain the RB-tree invariants
+    for efficient insertions, deletions, and searches.
+    """
+
+    RED = True
+    BLACK = False
+
+    SENTINEL_KEY = 2**31 - 1
+    SENTINEL_DATA = "__NIL__"
+
+    @dataclass(repr=False, slots=True)
+    class _TreeNode:
+        key: float
+        data: Any
+        left: Optional["RBTree._TreeNode"] = None
+        right: Optional["RBTree._TreeNode"] = None
+        parent: Optional["RBTree._TreeNode"] = None
+        color: bool = True
+
+    def __init__(self) -> None:
+        """nil node is the only one leaf of rb-tree"""
+        self._nil = self._TreeNode(
+            key=RBTree.SENTINEL_KEY,
+            data=RBTree.SENTINEL_DATA,
+            color=self.BLACK,
+            left=None,
+            right=None,
+            parent=None,
+        )
+        self._nil.left = self._nil
+        self._nil.right = self._nil
+        self._nil.parent = self._nil
+        self._root = self._nil
+
+    def _new_node(self, key: float, data: Any = None) -> _TreeNode:
+        return self._TreeNode(
+            key=key, data=data, left=self._nil, right=self._nil, parent=self._nil, color=RBTree.RED
+        )
+
+    def _right_rotate(self, y: Optional[_TreeNode]) -> None:
+        r"""
+        subtree:
+            |           left-rotate(x)          |
+            y           <-------------          x
+           / \                                 / \
+          x   z         ------------->        a   y
+         / \            right-rotate(y)          / \
+        a   b                                   b   z
+        """
+        # avl-tree rotate step
+        x = y.left
+        y.left = x.right
+
+        # x has subtree
+        if x.right is not self._nil:
+            x.right.parent = y
+        x.parent = y.parent
+
+        # y is root
+        if y.parent is self._nil:
+            self._root = x
+        # y is parent left child
+        elif y is y.parent.left:
+            y.parent.left = x
+        # y is parent right child
+        else:
+            y.parent.right = x
+
+        # avl-tree rotate step
+        x.right = y
+        y.parent = x
+
+    def _left_rotate(self, x: Optional[_TreeNode]) -> None:
+        r"""
+        symmetrical to right-rotate
+        """
+        # avl-tree rotate step
+        y = x.right
+        x.right = y.left
+
+        # y has subtree
+        if y.left is not self._nil:
+            y.left.parent = x
+        y.parent = x.parent
+
+        # x is root
+        if x.parent is self._nil:
+            self._root = y
+        # x is parent left child
+        elif x is x.parent.left:
+            x.parent.left = y
+        # x is parent right child
+        else:
+            x.parent.right = y
+
+        # avl-tree rotate step
+        y.left = x
+        x.parent = y
+
+    def _get(self, key: float) -> _TreeNode:
+        """Explicit is better than implicit, return NIL it not found"""
+        curr = self._root
+        while curr != self._nil:
+            if key < curr.key:
+                curr = curr.left
+            elif key > curr.key:
+                curr = curr.right
+            else:
+                return curr
+        return self._nil
+
+    def get(self, key: float) -> Optional[_TreeNode]:
+        """Simple is better than complex"""
+        node = self._get(key)
+        if node is self._nil:
+            return None
+        return node
+
+    def contains(self, key: float) -> bool:
+        if not self.get(key):
+            return False
+        return True
+
+    def _insert_fix_up(self, node: Optional[_TreeNode]) -> None:
+        """maintain rb-tree invariants after inserting
+
+        we need uncle as parent and grandpa is easy to get,
+        since we got uncle, we analyse each subtree's BH
+        and to maintain invariants.
+
+        uncle is a tool, not the core, the core is BH(black-height)
+        """
+        # Iteration implementation: parent is not root, so grandpa must exist(root or not)
+        while node.parent.color == RBTree.RED:
+            # parent is grandpa's left child
+            if node.parent is node.parent.parent.left:
+                uncle = node.parent.parent.right
+                # uncle exists and color is red
+                if uncle.color == RBTree.RED:
+                    # we can fix, because BH can maintain by re-color
+                    node.parent.color = RBTree.BLACK
+                    uncle.color = RBTree.BLACK
+                    node.parent.parent.color = RBTree.RED
+                    # use while iteration, not recursion,
+                    # use grandpa ptr to check grandpa subtree part until while loop ends
+                    node = node.parent.parent
+                # uncle is black or not exists
+                else:
+                    # if node is parent right child, do more rotation
+                    if node is node.parent.right:
+                        node = node.parent  # change ptr to parent
+                        self._left_rotate(node)  # triangle
+                    # node is parent left child
+                    node.parent.color = RBTree.BLACK
+                    node.parent.parent.color = RBTree.RED
+                    self._right_rotate(node.parent.parent)  # line
+            # Mirror Part: parent is grandpa's left child
+            else:
+                uncle = node.parent.parent.left
+                if uncle.color == RBTree.RED:
+                    node.parent.color = RBTree.BLACK
+                    uncle.color = RBTree.BLACK
+                    node.parent.parent.color = RBTree.RED
+                    node = node.parent.parent
+                else:
+                    if node is node.parent.left:
+                        node = node.parent
+                        self._right_rotate(node)
+                    node.parent.color = RBTree.BLACK
+                    node.parent.parent.color = RBTree.RED
+                    self._right_rotate(node.parent.parent)
+        # insert node is root, re-color to black
+        self._root.color = RBTree.BLACK
+
+    def insert_or_update(self, key: float, data: Any = None) -> None:
+        # key exists, update
+        node = self.get(key)
+        if node:
+            node.data = data
+            return None
+
+        # key not found, insert new
+        new_node = self._new_node(key=key, data=data)
+        parent = self._nil
+        curr = self._root
+
+        # loop to find node
+        while curr != self._nil:
+            parent = curr
+            if new_node.key < curr.key:
+                curr = curr.left
+            else:
+                curr = curr.right
+
+        new_node.parent = parent
+        # tree empty
+        if parent is self._nil:
+            self._root = new_node
+        # make left child
+        elif new_node.key < parent.key:
+            parent.left = new_node
+        # make right child
+        else:
+            parent.right = new_node
+
+        self._insert_fix_up(new_node)
+
+    def _delete_fix_up(self, node: Optional[_TreeNode]) -> None:
+        """maintain rb-tree invariants after deleting"""
+        # iteration implementation: from leaf to root until while loop ends
+        while node is not self._root and node.color == RBTree.BLACK:
+            # node is parent left child
+            if node is node.parent.left:
+                sibling = node.parent.right
+                # case 1: sibling is red
+                if sibling.color == RBTree.RED:
+                    # recolor, rotate
+                    sibling.color = RBTree.BLACK
+                    node.parent.color = RBTree.RED
+                    self._left_rotate(node.parent)
+                    # go grandpa, iter
+                    sibling = node.parent.right
+                # case 2: sibling is black, and sibling's children are black, recolor
+                if sibling.left.color == RBTree.BLACK and sibling.right.color == RBTree.BLACK:
+                    sibling.color = RBTree.RED
+                    # go parent, iter
+                    node = node.parent
+                else:
+                    # case 3: sibling is black, its left child is red, its right child is black
+                    if sibling.right.color == RBTree.BLACK:
+                        sibling.left.color = RBTree.BLACK
+                        sibling.color = RBTree.RED
+                        self._right_rotate(sibling)
+                        sibling = node.parent.right
+                    # case 4: sibling is black, its right child is red
+                    sibling.color = node.parent.color
+                    node.parent.color = RBTree.BLACK
+                    sibling.right.color = RBTree.BLACK
+                    self._left_rotate(node.parent)
+                    node = self._root
+            else:
+                sibling = node.parent.left
+                # case 1
+                if sibling.color == RBTree.RED:
+                    sibling.color = RBTree.BLACK
+                    node.parent.color = RBTree.RED
+                    self._right_rotate(node.parent)
+                    sibling = node.parent.left
+                # case 2
+                if sibling.right.color == RBTree.BLACK and sibling.left.color == RBTree.BLACK:
+                    sibling.color = RBTree.RED
+                    node = node.parent
+                else:
+                    # case 3
+                    if sibling.left.color == RBTree.BLACK:
+                        sibling.right.color = RBTree.BLACK
+                        sibling.color = RBTree.RED
+                        self._left_rotate(sibling)
+                        sibling = node.parent.left
+                    # case 4
+                    sibling.color = node.parent.color
+                    node.parent.color = RBTree.BLACK
+                    sibling.left.color = RBTree.BLACK
+                    self._right_rotate(node.parent)
+                    node = self._root
+        # recolor root
+        node.color = RBTree.BLACK
+
+    def _transplant(self, u: Optional[_TreeNode], v: Optional[_TreeNode]) -> None:
+        """
+        inner helper method extracted to make delete() cleaner
+        simple to _shift() in BST
+
+        change the relation of u(deleted), v(replaced)
+        """
+        # u is root
+        if u.parent is self._nil:
+            self._root = v
+        # u is parent left child
+        elif u is u.parent.left:
+            u.parent.left = v
+        # u is parent right child
+        else:
+            u.parent.right = v
+        v.parent = u.parent
+
+    def _min(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        """return min node of node's subtree"""
+        while node.left is not self._nil:
+            node = node.left
+        return node
+
+    def delete(self, key: float) -> None:
+        node = self.get(key)
+        if not node:
+            return None
+
+        successor = node
+        successor_orig_color = successor.color
+
+        # case 1: node does not have left child
+        if node.left is self._nil:
+            child = node.right
+            self._transplant(node, node.right)
+        # case 2: node does not have right child
+        elif node.right is self._nil:
+            child = node.left
+            self._transplant(node, node.left)
+        # case 3: node has 2 children, find successor
+        else:
+            successor = self._min(node.right)
+            successor_orig_color = successor.color
+            child = successor.right
+
+            # successor is node's adjacent child
+            if successor.parent is node:
+                child.parent = successor
+            # successor is not Adjacent with node
+            else:
+                self._transplant(successor, successor.right)
+                # change ptr
+                successor.right = node.right
+                successor.right.parent = successor
+
+            self._transplant(node, successor)
+            successor.left = node.left
+            successor.left.parent = successor
+            successor.color = node.color
+
+        if successor_orig_color == RBTree.BLACK:
+            self._delete_fix_up(child)
