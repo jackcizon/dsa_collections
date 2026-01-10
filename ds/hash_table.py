@@ -170,4 +170,4 @@ class HashTable:
         return self._count
 
     def __iter__(self) -> Iterator:
-        yield self.keys()
+        return self.keys()
