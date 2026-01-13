@@ -40,13 +40,19 @@ class Graph:
     }
     """
 
-    def __init__(self, **attrs: Any):
+    def __init__(self, **attrs: Any) -> None:
         self._graph = {}
         self._nodes: dict[Hashable, dict[Hashable, Any]] = {}
         self._adj: dict[Hashable, dict[Hashable, Any]] = {}
         self._graph.update(attrs)
 
     def __getattr__(self, attr: str) -> Any:
+        """
+        return the self._graph info.
+
+        :param attr: graph extra attrs
+        :return: Any
+        """
         try:
             return self._graph[attr]
         except KeyError:
@@ -54,14 +60,22 @@ class Graph:
 
     @property
     def name(self) -> Optional[str]:
-        """return graph name"""
+        """
+        return graph name
+
+        :return: str
+        """
         return self._graph.get("name", "")
 
     def add_node(self, node: Hashable, **attrs: Any) -> None:
         """
+        create a node in the graph.
+
+        e.g.:
         G.add_node(1, (size=10))
-        :param node:
-        :return:
+
+        :param node: target node
+        :return: None
         """
         if node not in self._nodes:
             self._adj[node] = {}  # clear node adj info
@@ -71,6 +85,10 @@ class Graph:
 
     def add_edge(self, u: Hashable, v: Hashable, **attrs: Any) -> None:
         """
+        add edge u-v if not exists, and it will create 2 nodes, or update the edge if exists.
+        but the attrs maybe reset, for update attrs, use update_edge_attrs()
+
+        e.g.:
         G.add_edge(1, 3, (weight=7, capacity=15, length=342.7))
 
         _adj ={
@@ -83,10 +101,9 @@ class Graph:
             }
         }
 
-        :param u:
-        :param v:
-        # :param weight:
-        :return:
+        :param u: from node
+        :param v: to node
+        :return: None
         """
         if u not in self._nodes:
             # reset node and adj info
@@ -106,6 +123,12 @@ class Graph:
         self._adj[v][u] = u2v_attrs
 
     def remove_node(self, node: Hashable) -> None:
+        """
+        remove node if exists or raise Exception
+
+        :param node: traget node
+        :return: None
+        """
         adj = self._adj
         try:
             node_neighbor_keys: list[Hashable] = list(adj[node])  # get snapshot, not itself
@@ -118,6 +141,13 @@ class Graph:
         del self._adj[node]
 
     def remove_edge(self, u: Hashable, v: Hashable) -> None:
+        """
+        remove edge u-v if exists or raise Exception
+
+        :param u: from node
+        :param v: to node
+        :return: None
+        """
         try:
             del self._adj[u][v]
             if u != v:  # self-loop needs only one entry removed
@@ -143,28 +173,58 @@ class Graph:
         return self.number_of_nodes()
 
     def clear(self) -> None:
+        """
+        manually clear graph data.
+
+        :return: None
+        """
         self._adj.clear()
         self._nodes.clear()
         self._graph.clear()
 
     def has_node(self, node: Hashable) -> bool:
+        """
+        return true/false if node exists.
+
+        :param node: target node
+        :return: bool
+        """
         if node in self._nodes:
             return True
         return False
 
     def has_edge(self, u: Hashable, v: Hashable) -> bool:
+        """
+        return true/false if has edge u-v.
+
+        :param u: from node
+        :param v: to node
+        :return: bool
+        """
         try:
             return v in self._adj[u] and u in self._adj[v]
         except KeyError:
             return False
 
-    def neighbors(self, node: Hashable) -> Optional[dict]:
+    def neighbors(self, node: Hashable) -> dict:
+        """
+        get all neighbors info(dict) of node.
+
+        :param node: target node
+        :return: dict
+        """
         try:
             return self._adj[node]
         except KeyError:
             raise KeyError(f"node {node} is not in the graph")
 
     def neighbors_keys(self, node: Hashable) -> list:
+        """
+        get all neighbors keys of node.
+
+        :param node: target node
+        :return: list
+        """
         neighbors_dict = self.neighbors(node)
         return list(dict(neighbors_dict).keys()) if neighbors_dict else []
 
@@ -181,7 +241,12 @@ class Graph:
         ...
 
     def edges(self, need_attrs: bool = True) -> list[Any]:
-        """return all edges, with(out) attrs distinctly."""
+        """
+        return all edges, with(out) attrs distinctly.
+
+        :param need_attrs: whether return attrs or not
+        :return: list
+        """
         seen = set()
         edge_list = []
         for u, neighbors in self._adj.items():
@@ -191,22 +256,94 @@ class Graph:
                     seen.add((u, v))
         return edge_list
 
-    def get_edge_data(self, u: Hashable, v: Hashable) -> Optional[dict]:
+    def get_edge_attrs(self, u: Hashable, v: Hashable) -> dict:
+        """
+        get the attrs of edge u-v.
+
+        :param u: from node
+        :param v: to node
+        :return: dict
+        """
         try:
             return self._adj[u][v]
         except KeyError:
             raise KeyError(f"edge [{u}-{v}] is not in the graph")
 
     def number_of_edges(self) -> int:
+        """
+        return number of edges.
+
+        :return: int
+        """
         return len(self.edges(need_attrs=False))
 
     def adjacency(self) -> list:
+        """
+        return list of self.adj info(dict).
+
+        :return: list
+        """
         return list(self._adj.items())
 
     def degree(self, node: Optional[Hashable] = None) -> Union[dict[Hashable, int], int]:
+        """
+        return the degree of node or dict of degree for all nodes.
+
+        :param node: None for all or provided for one
+        :return: dict | int
+        """
         if node is None:
             return {u: len(neighbors) for u, neighbors in self._adj.items()}
         return len(self._adj.get(node, {}))
+
+    def weight(self, u: Hashable, v: Hashable, default: int = 1) -> int:
+        """
+        return the weight of edge u-v, default is 1.
+
+        :param u: from node
+        :param v: to node
+        :param default: default weight
+        :return: int
+        """
+        if self.has_edge(u, v):
+            return self._adj[u][v].get("weight", default)
+        raise KeyError(f"edge [{u}-{v}] is not in the graph")
+
+    def update_edge_attrs(self, u: Hashable, v: Hashable, **attrs: Any) -> None:
+        """
+        update attrs of edge u-v, if the edge does not exist, raises KeyError.
+
+        :param u: from node
+        :param v: to node
+        :param attrs: Any
+        :return: None
+        """
+        if not self.has_edge(u, v):
+            raise KeyError(f"edge [{u}-{v}] does not exist")
+        self._adj[u][v].update(attrs)
+
+    def get_node_attrs(self, node: Hashable) -> dict:
+        """
+        get the attrs of edge u-v.
+
+        :param node: target node
+        :return: dict
+        """
+        try:
+            return self._nodes[node]
+        except KeyError:
+            raise KeyError(f"node {node} is not in the graph")
+
+    def update_node_attrs(self, node: Hashable, **attrs: Any) -> None:
+        """
+        update attrs of node, if node does not exists, raise KeyError.
+
+        :param node: target node
+        :return: None
+        """
+        if not self.has_node(node):
+            raise KeyError(f"node {node} does not exist")
+        self._nodes[node].update(attrs)
 
 
 class DGraph(Graph):

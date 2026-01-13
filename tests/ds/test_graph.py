@@ -66,9 +66,9 @@ def test_graph():
     with pytest.raises(KeyError):
         g.neighbors_keys(-100)
 
-    assert g.get_edge_data(1, 2) == {"weight": 2}
+    assert g.get_edge_attrs(1, 2) == {"weight": 2}
     with pytest.raises(KeyError):
-        g.get_edge_data("n1", "n2")
+        g.get_edge_attrs("n1", "n2")
 
     assert g.edges() == [(1, 2, {"weight": 2})]
     assert g.edges(need_attrs=False) == [(1, 2)]
@@ -85,5 +85,27 @@ def test_graph():
     assert g.degree() == {1: 1, 2: 1, 4: 0, 5: 0, 8: 0}
     assert g.degree(node=1) == 1
 
-    print(list(g))
+    assert g.weight(1, 2) == 2  # true
+    g.add_edge(1, 2, weight=1)  # update weight
+    assert g.weight(1, 2) == 1  # true
+    assert g.get_edge_attrs(1, 2)["weight"] == 1
+    with pytest.raises(KeyError):
+        g.weight(10000, 100)
+
+    g.update_edge_attrs(1, 2, weight=10)
+    assert g.weight(1, 2) == 10
+    with pytest.raises(KeyError):
+        g.update_edge_attrs(100, 1000, aaa=1)
+
+    assert g.get_node_attrs(1) == {"color": "red"}
+    g.update_node_attrs(1, color="black", name="1")
+    assert g.get_node_attrs(1) == {"color": "black", "name": "1"}
+
+    print("\n# after operations:")
+    print("adj2 =", g._adj)
+    print("nodes2 =", g._nodes)
+
+    print("total nodes list =", list(g))
     g.clear()
+    print("\nafter clearing:")
+    print("g =", list(g))
