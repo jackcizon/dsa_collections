@@ -10,6 +10,7 @@ All functions here:
 - do NOT modify graph structure
 """
 
+from collections import deque
 from typing import Hashable, Iterator
 
 from ds.graph import Graph
@@ -17,13 +18,18 @@ from ds.graph import Graph
 
 def dfs(graph: Graph, source: Hashable) -> Iterator[Hashable]:
     """
-    Depth First Search(DFS)
+    Perform a depth-first search (DFS) traversal starting from a source node.
 
-    a graph traversal algorithm that starts from a starting node:
-    1. It first traverses a path to the end.
-    2. then backtracks to the previous branch point, exploring other unvisited neighbors.
-    3. This continues until all reachable nodes have been visited.
-    4. if an isolated node is not a source node, it is simply not within the scope of dfs.
+    DFS is a graph traversal algorithm that explores nodes by going as deep
+    as possible along each branch before backtracking. Each node reachable
+    from the source is yielded exactly once. DFS uses a stack (LIFO) to
+    manage the frontier and handles cycles and self-loops correctly.
+
+    Key properties:
+    - Traversal is depth-first (go deep before backtracking)
+    - Single-source: only visits nodes reachable from `source`
+    - Handles cycles and self-loops correctly
+    - Uses a stack (LIFO) to manage frontier nodes
 
     :param graph: the graph instance
     :param source: the start node
@@ -41,10 +47,35 @@ def dfs(graph: Graph, source: Hashable) -> Iterator[Hashable]:
                 visited.add(neighbor)
 
 
-# def bfs(graph: Graph):
-#     pass
-#
-#
+def bfs(graph: Graph, source: Hashable) -> Iterator[Hashable]:
+    """
+    Perform a breadth-first search (BFS) traversal starting from a source node.
+
+    BFS is a graph traversal algorithm that explores nodes layer by layer:
+    it first visits all neighbors of the source node, then neighbors of neighbors,
+    and so on, until all reachable nodes are visited.
+
+    Key properties:
+    - Traversal is level-order (layer by layer)
+    - Single-source: only visits nodes reachable from `source`
+    - Handles cycles and self-loops correctly
+    - Uses a queue (FIFO) to manage frontier nodes
+
+    :param graph: the graph instance
+    :param source: the start node
+    :return: Iterator of nodes
+    """
+    visited: set[Hashable] = {source}
+    queue: deque[Hashable] = deque([source])
+    while queue:
+        node = queue.popleft()  # O(1), do not use list, it's O(n)
+        yield node
+        for neighbor in graph.neighbors_keys(node):
+            if neighbor not in visited:
+                queue.append(neighbor)
+                visited.add(neighbor)
+
+
 # def topo_sort(graph: Graph):
 #     """
 #     Notes:
