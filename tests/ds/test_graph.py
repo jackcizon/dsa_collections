@@ -100,6 +100,20 @@ def test_graph():
     assert g.get_node_attrs(1) == {"color": "red"}
     g.update_node_attrs(1, color="black", name="1")
     assert g.get_node_attrs(1) == {"color": "black", "name": "1"}
+    with pytest.raises(KeyError):
+        g.get_node_attrs(-100)
+    with pytest.raises(KeyError):
+        g.update_node_attrs(-1000)
+
+    g.reset_node_attrs(1)
+    assert g.get_node_attrs(1) == {}
+    with pytest.raises(KeyError):
+        g.reset_node_attrs(-100)
+
+    g.reset_edge_attrs(1, 2)
+    assert g.get_edge_attrs(1, 2) == {}
+    with pytest.raises(KeyError):
+        g.reset_edge_attrs(100, -100)
 
     print("\n# after operations:")
     print("adj2 =", g._adj)
