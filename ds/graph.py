@@ -345,6 +345,29 @@ class Graph:
             raise KeyError(f"node {node} does not exist")
         self._nodes[node].update(attrs)
 
+    def reset_node_attrs(self, node: Hashable) -> None:
+        """
+        clear node attrs.
+
+        :param node: target node
+        :return: None
+        """
+        if not self.has_node(node):
+            raise KeyError(f"node {node} does not exist")
+        self._nodes[node].clear()
+
+    def reset_edge_attrs(self, u: Hashable, v: Hashable) -> None:
+        """
+        clear edge attrs.
+
+        :param u: from node
+        :param v: to node
+        :return: None
+        """
+        if not self.has_edge(u, v):
+            raise KeyError(f"edge [{u}-{v}] does not exist")
+        self._adj[u][v].clear()
+
 
 class DGraph(Graph):
     """Directed Graph"""
