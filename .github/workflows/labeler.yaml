@@ -9,7 +9,7 @@ jobs:
     if: github.event.pull_request != null   # <=== 只在存在 PR 时运行
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/labeler@v6
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
