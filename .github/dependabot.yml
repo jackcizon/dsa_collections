@@ -9,6 +9,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "virtualenv"
 
   - package-ecosystem: "github-actions"
     directory: "/.github/workflows"
