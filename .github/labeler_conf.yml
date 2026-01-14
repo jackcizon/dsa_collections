@@ -1,0 +1,14 @@
+# .github/labeler.yml
+
+ds:
+  - "ds/**"
+
+algo:
+  - "algo/**"
+
+test:
+  - "tests/**"
+
+docs:
+  - "docs/**"
+  - "*.md"
