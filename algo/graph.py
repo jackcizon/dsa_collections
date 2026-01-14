@@ -76,20 +76,10 @@ def bfs(graph: Graph, source: Hashable) -> Iterator[Hashable]:
                 visited.add(neighbor)
 
 
-# def topo_sort(graph: Graph):
-#     """
-#     Notes:
-#         must use directed graph
-#     :param graph:
-#     :return:
-#     """
-#     pass
-#
-#
-# def dijkstra(graph: Graph):
-#     pass
-#
-#
+def dijkstra() -> None:
+    return None
+
+
 # def bellman_ford(graph: Graph):
 #     pass
 #
@@ -103,4 +93,14 @@ def bfs(graph: Graph, source: Hashable) -> Iterator[Hashable]:
 #
 #
 # def mst_kruskal(graph: Graph):
+#     pass
+#
+#
+# def topo_sort(graph: Graph):
+#     """
+#     Notes:
+#         must use directed graph
+#     :param graph:
+#     :return:
+#     """
 #     pass
