@@ -1,5 +1,5 @@
 from ds.graph import Graph
-from algo.graph import dfs, bfs
+from algo.graph import dfs, bfs, dijkstra
 
 
 def make_graph():
@@ -36,4 +36,5 @@ def test_bfs():
     assert list(bfs(graph=g, source=100)) == [100]
 
 
-# ......
+def test_dijkstra():
+    assert dijkstra() is None
