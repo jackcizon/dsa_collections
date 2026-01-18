@@ -73,14 +73,7 @@ def test_graph():
     assert g.edges() == [(1, 2, {"weight": 2})]
     assert g.edges(need_attrs=False) == [(1, 2)]
     assert len(g.edges(need_attrs=False)) == g.number_of_edges() == 1
-
-    assert g.adjacency() == [
-        (1, {2: {"weight": 2}}),
-        (2, {1: {"weight": 2}}),
-        (4, {}),
-        (5, {}),
-        (8, {}),
-    ]
+    assert g.adjacency == {1: {2: {"weight": 2}}, 2: {1: {"weight": 2}}, 4: {}, 5: {}, 8: {}}
 
     print("\n# __getitem__ test:")
     print("g[1] =", g[1])
