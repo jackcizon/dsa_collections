@@ -85,12 +85,12 @@ def dijkstra(graph: Graph, source: Hashable, target: Hashable | None = None) -> 
     :param graph: graph instance
     :param source: source node
     :param target: target node or None
-    :return: tuple
+    :return: tuple[dict, dict]
     """
     distance: dict[Hashable, float] = {source: 0}
     predecessors: dict[Hashable, Hashable] = {}
     visited: set = set()
-    paths: dict[Hashable, list[Hashable]] = {source: [source]}
+    # paths: dict[Hashable, list[Hashable]] = {source: [source]}
 
     # node: Hashable may cannot compare, it will cause MinHeap compare error,
     # so we need a counter: Iterable to increment by 1 each call to make the
@@ -107,36 +107,40 @@ def dijkstra(graph: Graph, source: Hashable, target: Hashable | None = None) -> 
             continue
         visited.add(v)
 
-        # loop neighbors
+        # loop neighbors, we can get the full distance
         for u, attrs in graph[v].items():
             weight = graph.weight(v, u)
             min_dist_vu = dist_v + weight
 
-            if u not in distance or min_dist_vu < distance[u]:
+            if u not in distance or min_dist_vu < distance[u]:  # similar to inf, but we use if u in distance
                 distance[u] = min_dist_vu
-                predecessors[u] = v
-                heapq.heappush(min_heap, (min_dist_vu, next(counter), u))
+                predecessors[u] = v  # update pred
+                heapq.heappush(min_heap, (min_dist_vu, next(counter), u))  # push in heap, get min val after
 
-    # build paths
-    for node in distance:
-        if node == source:
-            continue
-        path = []
-        current = node
-        while current != source:
-            path.append(current)
-            current = predecessors[current]
-        path.append(source)
-        path.reverse()
-        paths[node] = path
+    # build paths, before this, we have already got distance
+    # build paths operation is not the core of dijkstra algo
+    # the core is (predecessors, distance)
+    # it's python list skill representation
+    # for node in distance:
+    #     if node == source:
+    #         continue
+    #     path = []
+    #     current = node
+    #     while current != source:
+    #         path.append(current)
+    #         current = predecessors[current]
+    #     path.append(source)
+    #     path.reverse()
+    #     paths[node] = path
 
     if target is not None:
         if target not in distance:
             raise KeyError(f"No path to {target}")
-        return {target: distance[target]}, {target: paths[target]}
+        # return {target: distance[target]}, {target: paths[target]}
+        return {target: distance[target]}, predecessors
 
-    return distance, paths
-
+    # return distance, paths
+    return distance, predecessors
 
 # def bellman_ford(graph: Graph):
 #     pass

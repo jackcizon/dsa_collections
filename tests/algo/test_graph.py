@@ -65,15 +65,35 @@ def test_dijkstra():
       2   2   1
     """
 
-    distances, paths = dijkstra(g, source="A")
-    print("\n# from A to all:")
-    print("distance:", distances)
-    print("paths:", paths)
+    # distances, paths = dijkstra(g, source="A")
+    # print("\n# from A to all:")
+    # print("distance:", distances)
+    # print("paths:", paths)
 
-    distance, path = dijkstra(g, source="A", target="H")
+    distances, predecessors = dijkstra(g, source="A")
+    print("\n# from A to all:")
+    print("distance =", distances)
+    print("predecessors =", predecessors)
+
+    # distance, path = dijkstra(g, source="A", target="H")
+    # print("\n# from A to H:")
+    # print("distance:", distance)
+    # print("paths:", path)
+    distance, predecessors = dijkstra(g, source="A", target="H")
     print("\n# from A to H:")
-    print("distance:", distance)
-    print("paths:", path)
+    print("distance =", distance)
+    print("predecessors =", predecessors)
 
     with pytest.raises(KeyError):
         dijkstra(g, source="A", target=-1000)
+
+
+pred = {
+    # 'B': 'A',
+    'C': 'A',
+    'E': 'C',
+    # 'D': 'B',
+    'F': 'E',
+    # 'G': 'D',
+    'H': 'F'
+}
