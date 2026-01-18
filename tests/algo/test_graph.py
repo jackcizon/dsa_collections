@@ -82,18 +82,7 @@ def test_dijkstra():
     distance, predecessors = dijkstra(g, source="A", target="H")
     print("\n# from A to H:")
     print("distance =", distance)
-    print("predecessors =", predecessors)
+    print("target_predecessors =", predecessors)
 
     with pytest.raises(KeyError):
         dijkstra(g, source="A", target=-1000)
-
-
-pred = {
-    # 'B': 'A',
-    'C': 'A',
-    'E': 'C',
-    # 'D': 'B',
-    'F': 'E',
-    # 'G': 'D',
-    'H': 'F'
-}

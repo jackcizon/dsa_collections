@@ -112,35 +112,41 @@ def dijkstra(graph: Graph, source: Hashable, target: Hashable | None = None) -> 
             weight = graph.weight(v, u)
             min_dist_vu = dist_v + weight
 
-            if u not in distance or min_dist_vu < distance[u]:  # similar to inf, but we use if u in distance
+            # similar to set distance[u] = inf, but we use `if u in distance`
+            if u not in distance or min_dist_vu < distance[u]:
                 distance[u] = min_dist_vu
                 predecessors[u] = v  # update pred
-                heapq.heappush(min_heap, (min_dist_vu, next(counter), u))  # push in heap, get min val after
-
-    # build paths, before this, we have already got distance
-    # build paths operation is not the core of dijkstra algo
-    # the core is (predecessors, distance)
-    # it's python list skill representation
-    # for node in distance:
-    #     if node == source:
-    #         continue
-    #     path = []
-    #     current = node
-    #     while current != source:
-    #         path.append(current)
-    #         current = predecessors[current]
-    #     path.append(source)
-    #     path.reverse()
-    #     paths[node] = path
+                heapq.heappush(min_heap, (min_dist_vu, next(counter), u))  # pop min_val later
 
     if target is not None:
         if target not in distance:
             raise KeyError(f"No path to {target}")
-        # return {target: distance[target]}, {target: paths[target]}
-        return {target: distance[target]}, predecessors
-
-    # return distance, paths
+        # only get the related pred part between source and target
+        # predecessors = {
+        #     'B': 'A',
+        #     'C': 'A',
+        #     'E': 'C',
+        #     'D': 'B',
+        #     'F': 'E',
+        #     'G': 'D',
+        #     'H': 'F'
+        # }
+        # this is a dict algo used to get the sub-graph struct
+        curr = target
+        filtered_target_predecessors = {}
+        while curr != source:
+            pred = predecessors[curr]
+            filtered_target_predecessors[curr] = pred
+            curr = pred
+        # filtered_predecessors = {
+        #     'C': 'A',
+        #     'E': 'C',
+        #     'F': 'E',
+        #     'H': 'F'
+        # }
+        return {target: distance[target]}, filtered_target_predecessors
     return distance, predecessors
+
 
 # def bellman_ford(graph: Graph):
 #     pass
