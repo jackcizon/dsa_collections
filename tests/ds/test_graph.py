@@ -82,6 +82,10 @@ def test_graph():
         (8, {}),
     ]
 
+    print("\n# __getitem__ test:")
+    print("g[1] =", g[1])
+    print("g[1][2] =", g[1][2])
+
     assert g.degree() == {1: 1, 2: 1, 4: 0, 5: 0, 8: 0}
     assert g.degree(node=1) == 1
 
@@ -114,6 +118,9 @@ def test_graph():
     assert g.get_edge_attrs(1, 2) == {}
     with pytest.raises(KeyError):
         g.reset_edge_attrs(100, -100)
+
+    assert (1 in g) is True
+    assert (-99999 in g) is False
 
     print("\n# after operations:")
     print("adj2 =", g._adj)
