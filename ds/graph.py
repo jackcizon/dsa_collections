@@ -58,6 +58,23 @@ class Graph:
         except KeyError:
             raise AttributeError(attr)
 
+    def __getitem__(self, node: Hashable) -> dict[Hashable, Any]:
+        """return adj info, allow Chained calls.
+
+        :param node: target node
+        :return: dict[Hashable, Any]
+        """
+        return self._adj[node]
+
+    def __contains__(self, node: Hashable) -> bool:
+        """
+        return true if node is in graph.
+
+        :param node: target node
+        :return: bool
+        """
+        return node in self._nodes
+
     @property
     def name(self) -> Optional[str]:
         """
