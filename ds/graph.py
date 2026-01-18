@@ -294,13 +294,14 @@ class Graph:
         """
         return len(self.edges(need_attrs=False))
 
-    def adjacency(self) -> list:
+    @property
+    def adjacency(self) -> dict[Hashable, dict[Hashable, Any]]:
         """
-        return list of self.adj info(dict).
+        return self.adj
 
-        :return: list
+        :return: dict[Hashable, dict[Hashable, Any]]
         """
-        return list(self._adj.items())
+        return self._adj
 
     def degree(self, node: Optional[Hashable] = None) -> Union[dict[Hashable, int], int]:
         """
