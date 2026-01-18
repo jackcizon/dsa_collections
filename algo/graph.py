@@ -82,6 +82,30 @@ def dijkstra(graph: Graph, source: Hashable, target: Hashable | None = None) -> 
     """
     single source min path algo.
 
+    Computes the shortest distances from a source node to all other nodes
+    in a weighted graph with non-negative edge weights. Optionally, it can
+    stop early when a specific target node is reached.
+
+    Algorithm logic:
+    1. init distance of the source to 0 and other nodes to inf(or check u in distance)
+    2. use min-heap to repeatedly select the unvisited node with the min distance.
+    3. for selected node, loop neighbors to update predecessors, visited and distance
+    4. join node into set `visited`.
+    5. repeat steps 2-4 until all visited, got target node finalized.
+
+    Notes:
+    - The algo maintains predecessors for building paths, but does not construct paths itself.
+
+    e.g.:
+        # from A to all:
+        distance = {'A': 0, 'B': 2, 'C': 1, 'E': 3, 'D': 5, 'F': 5, 'G': 8, 'H': 6}
+        predecessors = {'B': 'A', 'C': 'A', 'E': 'C', 'D': 'B', 'F': 'E', 'G': 'D', 'H': 'F'}
+
+        # from A to H:
+        distance = {'H': 6}
+        predecessors = {'H': 'F', 'F': 'E', 'E': 'C', 'C': 'A'}
+
+
     :param graph: graph instance
     :param source: source node
     :param target: target node or None
@@ -90,7 +114,6 @@ def dijkstra(graph: Graph, source: Hashable, target: Hashable | None = None) -> 
     distance: dict[Hashable, float] = {source: 0}
     predecessors: dict[Hashable, Hashable] = {}
     visited: set = set()
-    # paths: dict[Hashable, list[Hashable]] = {source: [source]}
 
     # node: Hashable may cannot compare, it will cause MinHeap compare error,
     # so we need a counter: Iterable to increment by 1 each call to make the
