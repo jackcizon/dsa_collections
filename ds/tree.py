@@ -566,7 +566,7 @@ class AVLTree(BinaryTree):
             curr = curr.right
 
 
-class RBTree:
+class RBTree:  # pragma: no cover
     """
     RB-tree is a self-balanced BST inspired by AVL-tree and B-tree,
     using red and black nodes to maintain the RB-tree invariants

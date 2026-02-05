@@ -1,8 +1,10 @@
-# This Graph and DiGraph implementation is a lightweight adaptation inspired by NetworkX
-# Original NetworkX classes are licensed under the BSD 3-Clause License
-# (https://networkx.org)
-# Heavily modified and rewritten by Jack Cizon
+"""
+Portions of this file are derived from NetworkX
+https://networkx.org
 
+Original license: BSD 3-Clause License
+Modifications Copyright (c) 2026 Jack Cizon
+"""
 
 from typing import Any, Hashable, Optional, Iterator, Union, overload, Literal
 
