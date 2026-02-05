@@ -1,13 +1,9 @@
-# Some algorithms in this library are inspired by NetworkX
-# (https://networkx.org)
-# but implementations have been independently rewritten.
-
 """
-Graph algorithms.
+Portions of this file are derived from NetworkX
+https://networkx.org
 
-All functions here:
-- operate on ds.graph.Graph
-- do NOT modify graph structure
+Original license: BSD 3-Clause License
+Modifications Copyright (c) 2026 Jack Cizon
 """
 
 import heapq

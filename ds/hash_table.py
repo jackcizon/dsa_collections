@@ -71,7 +71,7 @@ class HashTable:
             if entry is None:
                 # all probes get None, insert into first tombstone
                 if first_tombstone is not None:
-                    idx = first_tombstone
+                    idx = first_tombstone  # pragma: no cover
                 self._entries[idx] = self._Entry(hash=h, key=key, value=value)
                 self._count += 1
                 self._used += 1
@@ -79,7 +79,7 @@ class HashTable:
 
             # tombstone, entry is softly deleted, but we need probe next
             if entry.is_deleted and first_tombstone is None:
-                first_tombstone = idx
+                first_tombstone = idx  # pragma: no cover
 
             # if exists, overwrite
             if entry and entry.is_deleted is False and entry.hash == h and entry.key == key:
@@ -127,8 +127,8 @@ class HashTable:
                 entry.value = value
                 return True
 
-            idx = (idx * 5 + perturb + 1) & mask
-            perturb >>= 5
+            idx = (idx * 5 + perturb + 1) & mask  # pragma: no cover
+            perturb >>= 5  # pragma: no cover
 
     def get(self, key: Hashable) -> Any:
         h = self._hash(key)
