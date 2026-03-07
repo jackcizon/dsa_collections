@@ -31,7 +31,7 @@ class Buffer:
 
     @property
     def data(self) -> str:
-        return self._data[self._read_pos: self._write_pos].decode()
+        return self._data[self._read_pos : self._write_pos].decode()
 
     def _is_buf_enough(self, size: int) -> bool:
         r"""
@@ -73,7 +73,7 @@ class Buffer:
         if self._read_pos + self.writable_size >= size:
             readable_size = self.readable_size
             # mem copy
-            copy_data = self._data[self._read_pos: self._write_pos]
+            copy_data = self._data[self._read_pos : self._write_pos]
             self._data[:readable_size] = copy_data
             # reset positions
             self._read_pos = 0
@@ -96,7 +96,7 @@ class Buffer:
         raw_buf = buf.encode()
         buf_size = len(raw_buf)
         self._try_extend(buf_size)
-        self._data[self._write_pos: self._write_pos + buf_size] = raw_buf
+        self._data[self._write_pos : self._write_pos + buf_size] = raw_buf
         self._write_pos += buf_size
 
     def remove(self) -> None:
