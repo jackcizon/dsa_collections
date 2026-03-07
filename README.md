@@ -8,6 +8,6 @@ A data structures and algorithms library for learning purposes, with 100% test c
 
 see license in `LICENSE.txt`
 
-## version
+## Version
 
-1.0.0
+**1.0.1**
