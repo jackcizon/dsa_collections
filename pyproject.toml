@@ -1,7 +1,7 @@
 [project]
 name = "dsa"
-version = "0.1.0"
-description = ""
+version = "1.0.0"
+description = "A data structures and algorithms library for learning purposes, with 100% test coverage."
 authors = [
     { name = "jackcizon", email = "jack20021213cn@gmail.com" }
 ]

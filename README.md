@@ -7,3 +7,7 @@ A data structures and algorithms library for learning purposes, with 100% test c
 ## Notes
 
 see license in `LICENSE.txt`
+
+## version
+
+1.0.0
