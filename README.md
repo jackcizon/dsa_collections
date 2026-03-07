@@ -2,8 +2,12 @@
 
 # DSA
 
-A data structures and algorithms library for learning purposes, with over 90% test coverage.
+A data structures and algorithms library for learning purposes, with 100% test coverage.
 
 ## Notes
 
 see license in `LICENSE.txt`
+
+## version
+
+1.0.0
