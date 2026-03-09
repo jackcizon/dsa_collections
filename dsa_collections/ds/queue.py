@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Optional, Iterator
 
-from ds.heap import MaxHeap
+from dsa_collections.ds.heap import MaxHeap
 
 
 class BaseQueue:

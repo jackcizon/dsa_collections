@@ -1,6 +1,6 @@
 import pytest
 
-from ds.buffer import Buffer
+from dsa_collections.ds.buffer import Buffer
 
 
 def test_init():

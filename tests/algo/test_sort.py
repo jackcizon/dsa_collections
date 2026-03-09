@@ -1,4 +1,4 @@
-from algo.sort import heap_sort
+from dsa_collections.algo.sort import heap_sort
 
 
 def test_heap_sort():

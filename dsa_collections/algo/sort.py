@@ -1,4 +1,4 @@
-from ds.heap import MaxHeap
+from dsa_collections.ds.heap import MaxHeap
 
 
 def heap_sort(arr: list) -> list:

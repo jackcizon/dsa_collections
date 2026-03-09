@@ -1,7 +1,7 @@
 import pytest
 
-from ds.examples.stack_example import valid_brackets, rpn, infix_to_suffix
-from ds.stack import LinkedStack, StandardStack
+from dsa_collections.ds.examples.stack_example import valid_brackets, rpn, infix_to_suffix
+from dsa_collections.ds.stack import LinkedStack, StandardStack
 
 
 def test_linked_queue():

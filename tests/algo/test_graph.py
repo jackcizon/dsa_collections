@@ -1,7 +1,7 @@
 import pytest
 
-from ds.graph import Graph
-from algo.graph import dfs, bfs, dijkstra
+from dsa_collections.ds.graph import Graph
+from dsa_collections.algo.graph import dfs, bfs, dijkstra
 
 
 def make_graph():

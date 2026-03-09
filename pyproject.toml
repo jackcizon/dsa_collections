@@ -1,25 +1,24 @@
 [project]
-name = "dsa"
-version = "1.0.0"
-description = "A data structures and algorithms library for learning purposes, with 100% test coverage."
+name = "dsa_collections"
+version = "2.2.0"
+description = "collections of data structures and algorithms for learning purposes, with 100% test coverage."
 authors = [
     { name = "jackcizon", email = "jack20021213cn@gmail.com" }
 ]
 readme = "README.md"
-license = "MIT"
+license = { text = "MIT" }
 requires-python = ">=3.12,<4.0"
-dependencies = [
-    "pytest (>=9.0.2,<10.0.0)",
-    "coverage (>=7.13.0,<8.0.0)",
-    "ruff (>=0.14.10,<0.15.0)",
-    "commitizen (>=4.10.1,<5.0.0)",
-    "pre-commit (>=4.5.1,<5.0.0)",
-    "mypy (>=1.19.1,<2.0.0)",
-    "networkx (>=3.6.1,<4.0.0) ; python_version >= \"3.12\" and python_full_version != \"3.14.1\" and python_version < \"4.0\""
-]
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0.2"
+coverage = "^7.13.0"
+ruff = "^0.14.10"
+commitizen = "^4.10.1"
+pre-commit = "^4.5.1"
+mypy = "^1.19.1"
 
 [tool.poetry]
-package-mode = false
+package-mode = true
+packages = [{ include = "dsa_collections" }]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -31,7 +30,7 @@ show_missing = true
 
 [tool.mypy]
 python_version = "3.12"
-files = ["algo", "ds"]
+files = ["dsa_collections"]
 
 check_untyped_defs = true
 disallow_untyped_defs = true

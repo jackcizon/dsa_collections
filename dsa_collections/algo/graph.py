@@ -8,10 +8,10 @@ Modifications Copyright (c) 2026 Jack Cizon
 
 import heapq
 from collections import deque
-from itertools import count, islice
-from typing import Hashable, Iterator, Any
+from itertools import count
+from typing import Hashable, Iterator
 
-from ds.graph import Graph
+from dsa_collections.ds.graph import Graph
 
 
 def dfs(graph: Graph, source: Hashable) -> Iterator[Hashable]:

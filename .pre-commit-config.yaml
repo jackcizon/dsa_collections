@@ -8,14 +8,14 @@ repos:
         entry: poetry run ruff
         language: system
         types: [ python ]
-        args: [ check, algo/, ds/, tests/ ]
+        args: [ check, dsa_collections/, dsa_collections/, tests/ ]
 
       - id: ruff-format
         name: format
         entry: poetry run ruff
         language: system
         types: [ python ]
-        args: [ format, algo/, ds/, tests/ ]
+        args: [ format, dsa_collections/, dsa_collections/, tests/ ]
 
       - id: mypy
         name: type
