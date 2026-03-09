@@ -1,6 +1,6 @@
-![CI](https://github.com/jackcizon/dsa/actions/workflows/ci.yaml/badge.svg)
+![CI](https://github.com/jackcizon/dsa_collections/actions/workflows/ci.yaml/badge.svg)
 
-# DSA
+# DSA Collections
 
 collections of data structures and algorithms for learning purposes, with 100% test coverage.
 
@@ -10,4 +10,4 @@ see license in `LICENSE.txt`
 
 ## Version
 
-**2.2.0**
+**2.2.1**
