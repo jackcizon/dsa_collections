@@ -4,10 +4,16 @@
 
 collections of data structures and algorithms for learning purposes, with 100% test coverage.
 
-## Notes
+## Install
 
-see license in `LICENSE.txt`
+```shell
+pip install dsa_collections
+```
 
 ## Version
 
 **2.2.1**
+
+## Notes
+
+see license in `LICENSE.txt`
