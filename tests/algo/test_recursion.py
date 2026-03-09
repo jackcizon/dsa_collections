@@ -1,4 +1,9 @@
-from algo.recursion import fib1, fib2, pascal_triangle_recursion, pascal_triangle_iteration
+from dsa_collections.algo.recursion import (
+    fib1,
+    fib2,
+    pascal_triangle_recursion,
+    pascal_triangle_iteration,
+)
 
 
 def test_fib():

@@ -3,10 +3,10 @@
 all: lint format type test coverage pre_commit
 
 lint:
-	poetry run ruff check algo/ ds/ tests/
+	poetry run ruff check dsa_collections/ dsa_collections/ tests/
 
 format:
-	poetry run ruff format algo/ ds/ tests/
+	poetry run ruff format dsa_collections/ dsa_collections/ tests/
 
 type:
 	poetry run mypy

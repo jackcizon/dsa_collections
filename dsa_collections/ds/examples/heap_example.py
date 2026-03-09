@@ -1,6 +1,6 @@
 from typing import Any
 
-from ds.heap import MaxHeap
+from dsa_collections.ds.heap import MaxHeap
 
 
 def kth_largest(arr: list, k: int) -> Any:

@@ -1,6 +1,6 @@
 import pytest
 
-from ds.graph import Graph
+from dsa_collections.ds.graph import Graph
 
 
 def test_graph():

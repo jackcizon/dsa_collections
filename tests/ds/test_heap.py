@@ -1,7 +1,7 @@
 import pytest
 
-from ds.examples.heap_example import kth_largest
-from ds.heap import MaxHeap
+from dsa_collections.ds.examples.heap_example import kth_largest
+from dsa_collections.ds.heap import MaxHeap
 
 
 def test_max_heap():

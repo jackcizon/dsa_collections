@@ -1,4 +1,4 @@
-from ds.tree import BinarySearchTree, AVLTree, RBTree
+from dsa_collections.ds.tree import BinarySearchTree, AVLTree, RBTree
 
 
 def test_binary_search_tree():

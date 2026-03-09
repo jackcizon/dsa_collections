@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from ds.queue import (
+from dsa_collections.ds.queue import (
     BaseQueue,
     StandardQueue,
     DoubleEndsQueue,

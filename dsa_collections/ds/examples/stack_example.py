@@ -1,5 +1,5 @@
 from typing import Any, Callable
-from ds.stack import StandardStack
+from dsa_collections.ds.stack import StandardStack
 
 
 def valid_brackets(brackets: str = "{()}<>[]") -> bool:

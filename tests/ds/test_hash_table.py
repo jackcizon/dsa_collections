@@ -1,8 +1,8 @@
-from ds.hash_table import HashTable
+from dsa_collections.ds.hash_table import HashTable
 
 
 def test_hashtable():
-    """hash table test cov can barely reach 100%, unless with a amount of data and a small size"""
+    """hash table test cov can barely reach 100%, unless with an amount of data and a small size"""
     print("=== HashTable Test ===")
 
     ht = HashTable(exp2_len=2)  # 小容量，测试扩容

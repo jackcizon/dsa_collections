@@ -1,6 +1,10 @@
 import pytest
 
-from ds.linked_list import SingleLinkedList, DoubleLinkedList, DoubleCircledLinkedList
+from dsa_collections.ds.linked_list import (
+    SingleLinkedList,
+    DoubleLinkedList,
+    DoubleCircledLinkedList,
+)
 
 
 def test_single_lined_list():

@@ -1,4 +1,4 @@
-from algo.search import binary_search
+from dsa_collections.algo.search import binary_search
 
 
 def test_binary_search():

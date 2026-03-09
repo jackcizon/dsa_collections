@@ -1,6 +1,6 @@
 import pytest
 
-from ds.dynamic_array import DynamicArray
+from dsa_collections.ds.dynamic_array import DynamicArray
 
 
 def test_init():
