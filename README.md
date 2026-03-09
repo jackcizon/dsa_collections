@@ -10,4 +10,4 @@ see license in `LICENSE.txt`
 
 ## Version
 
-**2.1.3**
+**2.2**
