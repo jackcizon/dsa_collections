@@ -12,7 +12,7 @@ pip install dsa_collections
 
 ## Version
 
-**2.2.1**
+**2.3.1**
 
 ## Notes
 
