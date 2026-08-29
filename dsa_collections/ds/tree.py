@@ -1,3 +1,4 @@
+from bisect import bisect_left
 from dataclasses import dataclass
 from typing import Any, Optional, Iterator
 
@@ -259,10 +260,10 @@ class BinarySearchTree(BinaryTree):
         return node.left is None and node.right is None
 
     def _shift(
-        self,
-        parent: Optional[_TreeNode],
-        deleted: _TreeNode,
-        child: Optional[_TreeNode],
+            self,
+            parent: Optional[_TreeNode],
+            deleted: _TreeNode,
+            child: Optional[_TreeNode],
     ) -> None:
         if parent is None:
             self._root = child
@@ -494,7 +495,7 @@ class AVLTree(BinaryTree):
         self._root = self._insert_recursion(node=self._root, key=key, data=data)
 
     def _insert_recursion(
-        self, node: Optional[_TreeNode], key: float, data: Any
+            self, node: Optional[_TreeNode], key: float, data: Any
     ) -> Optional[_TreeNode]:
         """inner method, insert recursively"""
         # empty avl-tree
@@ -576,7 +577,7 @@ class RBTree:  # pragma: no cover
     RED = True
     BLACK = False
 
-    SENTINEL_KEY = 2**31 - 1
+    SENTINEL_KEY = 2 ** 31 - 1
     SENTINEL_DATA = "__NIL__"
 
     @dataclass(repr=False, slots=True)
@@ -591,12 +592,7 @@ class RBTree:  # pragma: no cover
     def __init__(self) -> None:
         """nil node is the only one leaf of rb-tree"""
         self._nil = self._TreeNode(
-            key=RBTree.SENTINEL_KEY,
-            data=RBTree.SENTINEL_DATA,
-            color=self.BLACK,
-            left=None,
-            right=None,
-            parent=None,
+            key=RBTree.SENTINEL_KEY, data=RBTree.SENTINEL_DATA, color=self.BLACK
         )
         self._nil.left = self._nil
         self._nil.right = self._nil
@@ -900,3 +896,52 @@ class RBTree:  # pragma: no cover
 
         if successor_orig_color == RBTree.BLACK:
             self._delete_fix_up(child)
+
+
+class BTreeNode:
+    def __init__(self, degree: int = 2, is_leaf: bool = True) -> None:
+        self._degree = degree
+        self._is_leaf = is_leaf
+        self._keys: list[int] = []
+        self._children: list["BTreeNode"] = []
+
+    @property
+    def n(self) -> int:
+        return len(self._keys)
+
+    @property
+    def is_leaf(self) -> bool:
+        return self._is_leaf
+
+    @property
+    def is_full(self) -> bool:
+        return self.n == 2 * self._degree - 1
+
+    def search(self, key: int) -> tuple["BTreeNode", int] | None:
+        """find recursively"""
+        i = bisect_left(self._keys, key)  # binary search, only return index even cannot find
+        if i < self.n and self._keys[i] == key:  # found
+            return self, i
+
+        if self.is_leaf:  # over
+            return None
+
+        # recursion
+        return self._children[i].search(key)
+
+
+class BTree:
+    def __init__(self, degree: int = 2) -> None:
+        self.degree = degree
+        self.root = BTreeNode(degree)
+
+    @property
+    def max_key_count(self) -> int:
+        return 2 * self.degree - 1
+
+    @property
+    def min_key_count(self) -> int:
+        return self.degree - 1
+
+    def contains(self, key: int) -> bool:
+        return self.root.search(key) is not None
