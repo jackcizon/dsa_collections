@@ -197,7 +197,7 @@ def mst_prim(graph: Graph, start: Hashable):
         visited.add(node)
         total_weight += min_weight
 
-        # ass candidate edges to min-heap
+        # add candidate edges to min-heap
         for neighbor in graph.neighbors(node):
             if neighbor not in visited:
                 edge_weight = graph.weight(node, neighbor)
