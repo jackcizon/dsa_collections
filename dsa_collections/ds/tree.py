@@ -1,5 +1,6 @@
 from bisect import bisect_left
 from dataclasses import dataclass
+from collections import deque
 from typing import Any, Optional, Iterator
 
 
@@ -18,17 +19,21 @@ class BinaryTree:
         return self._root is None
 
     def get(self, key: float) -> Optional[_TreeNode]:
+        """BFS"""
         if self.is_empty():
             return None
 
-        curr = self._root
-        while curr:
-            if key < curr.key:
-                curr = curr.left
-            elif key > curr.key:
-                curr = curr.right
+        q = deque([self._root])
+
+        while q:
+            node = q.popleft()
+            if node.key == key:
+                return node
             else:
-                return curr
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
         return None
 
 
