@@ -173,12 +173,42 @@ def dijkstra(graph: Graph, source: Hashable, target: Hashable | None = None) -> 
 #
 # def floyd_warshall(graph: Graph):
 #     pass
-#
-#
-# def mst_prim(graph: Graph):
-#     pass
-#
-#
+
+def mst_prim(graph: Graph, start: Hashable):
+    """
+    Start from a vertex, and each time pick the edge with the smallest weight
+    between the 'currently connected set of points' and the 'outside set of points'
+    to bring that outside point in.
+    """
+    # init
+    visited: set[Hashable] = set()
+    hq = [(0, start)]  # (weight, vertex)
+    total_weight = 0
+
+    while hq:
+        # heapq is a min-heap by default
+        min_weight, node = heapq.heappop(hq)
+
+        # ignore visited vertex
+        if node in visited:
+            continue
+
+        # mark vertex as visited
+        visited.add(node)
+        total_weight += min_weight
+
+        # ass candidate edges to min-heap
+        for neighbor in graph.neighbors(node):
+            if neighbor not in visited:
+                edge_weight = graph.weight(node, neighbor)
+                heapq.heappush(hq, (edge_weight, neighbor))
+
+        # if the graph is not connected
+        if len(visited) != len(graph):
+            raise ValueError("Graph is not connected")
+
+    return total_weight
+
 # def mst_kruskal(graph: Graph):
 #     pass
 #

@@ -145,7 +145,7 @@ class Graph:
         """
         remove node if exists or raise Exception
 
-        :param node: traget node
+        :param node: target node
         :return: None
         """
         adj = self._adj
