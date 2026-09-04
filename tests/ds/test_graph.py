@@ -35,6 +35,8 @@ def test_graph():
     print("adj1 =", g._adj)
     print("nodes1 =", g._nodes)
 
+    print(f"\n# edges info:\n=========\n{g.edges(need_attrs=True)}\n==========\n")
+
     g.remove_node(3)
     g.remove_edge(4, 5)
     g.remove_edge(6, 6)
