@@ -9,7 +9,7 @@ Modifications Copyright (c) 2026 Jack Cizon
 import heapq
 from collections import deque
 from itertools import count
-from typing import Hashable, Iterator
+from typing import Hashable, Iterator, Any
 
 from dsa_collections.ds.graph import Graph
 
@@ -209,10 +209,56 @@ def mst_prim(graph: Graph, start: Hashable):
 
     return total_weight
 
-# def mst_kruskal(graph: Graph):
-#     pass
-#
-#
+def mst_kruskal(graph: Graph):
+    from dsa_collections.ds.dsu import DSU
+
+    ##############################
+    # 一个测试中的例子，作为参考.
+    #
+    # tests/ds/test_graph.py:38
+    # print(f"\n# edges info:\n=========\n{g.edges(need_attrs=True)}\n==========\n")
+    ##############################
+    #
+    # 输出:
+    # edges info:
+    # =========
+    # [(1, 2, {'weight': 2}), (4, 5, {}), (6, 6, {}), (7, 8, {})]
+    #
+    # need_attrs=True 要求打印edge的属性信息。
+
+    # 假设一个图，必须在连edge时加入weight
+    origin_edges_info: list[tuple[int, int, dict[str, Any]]] = graph.edges(need_attrs=True)
+
+    graph_len = len(graph)  # 这里默认graph强制必须写weight attr
+
+    # 编排数据
+    edges_info = []
+    for edge in origin_edges_info:
+        edges_info.append((edge[0], edge[1], edge[2].get('weight')))
+
+    # 按照权重排序
+    edges_info.sort(key=lambda e: e[2])
+
+    # 初始化dsu
+    dsu = DSU(size=graph_len)
+
+    # 返回数据
+    mst = []
+    total_weight = 0
+    for u, v, w in edges_info:
+        if dsu.union(u, v):
+            mst.append((u, v, w))
+            total_weight += w
+
+            if len(mst) == graph_len - 1:
+                break
+
+    # 如果最后不足 n-1 条边，说明图不连通
+    if len(mst) != graph_len - 1:
+        return None
+
+    return mst, total_weight
+
 # def topo_sort(graph: Graph):
 #     """
 #     Notes:
