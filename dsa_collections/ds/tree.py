@@ -291,6 +291,25 @@ class BinaryTree:
 
         return max_width
 
+    def is_similar(self, other: "BinaryTree"):
+        r"""
+             A               X
+            / \             / \
+           B   C           Y   Z
+          /               /
+         D               W
+        """
+        return self._similar(self._root, other._root)
+
+    def _similar(self, a: _TreeNode, b: _TreeNode):
+        if a is None and b is None:
+            return True
+
+        if a is None or b is None:
+            return False
+
+        return self._similar(a.left, b.left) and self._similar(a.right, b.right)
+
 
 class BinarySearchTree(BinaryTree):
     @dataclass(repr=False)
