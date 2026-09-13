@@ -13,7 +13,7 @@ class BinaryTree:
         right: Optional["BinaryTree._TreeNode"] = None
 
     def __init__(self, key: float, data: Any) -> None:
-        self._root = self._TreeNode(key=key, data=data, left=None, right=None)
+        self._root = self._TreeNode(key=key, data=data)
 
     def is_empty(self) -> bool:
         return self._root is None
@@ -121,7 +121,7 @@ class BinaryTree:
 
     def __iter__(self) -> Iterator:
         """inorder"""
-        stack: list[BinarySearchTree._TreeNode] = []
+        stack: list[BinaryTree._TreeNode] = []
         curr = self._root
 
         while curr or stack:
@@ -644,7 +644,7 @@ class AVLTree(BinaryTree):
 
     def __iter__(self) -> Iterator:
         stack: list[AVLTree._TreeNode] = []
-        curr = self._root
+        curr: "AVLTree._TreeNode" = self._root
 
         while curr or stack:
             while curr:
