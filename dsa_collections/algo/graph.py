@@ -11,7 +11,7 @@ from collections import deque
 from itertools import count
 from typing import Hashable, Iterator, Any
 
-from dsa_collections.ds.graph import Graph
+from dsa_collections.ds.graph import Graph, DGraph
 
 
 def dfs(graph: Graph, source: Hashable) -> Iterator[Hashable]:
@@ -209,6 +209,7 @@ def mst_prim(graph: Graph, start: Hashable):
 
     return total_weight
 
+
 def mst_kruskal(graph: Graph):
     from dsa_collections.ds.dsu import DSU
 
@@ -259,11 +260,72 @@ def mst_kruskal(graph: Graph):
 
     return mst, total_weight
 
-# def topo_sort(graph: Graph):
-#     """
-#     Notes:
-#         must use directed graph
-#     :param graph:
-#     :return:
-#     """
-#     pass
+
+def topo_sort(dgraph: DGraph):
+    """
+    Notes:
+        must use directed graph
+    :param dgraph:
+    :return:
+    """
+    #####################
+    # example: 经过数据编排后的dgraph
+    # dgraph = {
+    #     'A': ['C'],
+    #     'B': ['C'],
+    #     'C': ['D'],
+    #     'D': []
+    # }
+    #####################
+    from collections import deque
+
+    # init
+    in_degree = {v: 0 for v in dgraph}
+
+    # calc in-degree
+    for u in dgraph:
+        for v in dgraph[u]:
+            in_degree[v] += 1
+
+    # 把入度为0的节点入队
+    q = deque()
+    for u in dgraph:
+        if in_degree[u] == 0:
+            q.append(u)
+
+    result = []
+
+    while q:
+        u = q.popleft()
+        result.append(u)
+
+        # 删除u发出的所有边
+        for v in dgraph[u]:
+            in_degree[v] -= 1
+
+            if in_degree[v] == 0:
+                q.append(v)
+
+    # 有环, 没有全部取出
+    if len(result) != len(dgraph):
+        return None
+
+    return result
+
+
+def is_tree(graph: Graph):
+    if len(graph) == 0:
+        return True
+
+    # 树必然满足 |E| = |V| - 1
+    if graph.number_of_edges() != len(graph) - 1:
+        return False
+
+    # graph.nodes() => [1,2,3]
+    source = graph.nodes()[0]
+
+    # tests.algo.test_graph.test_dfs
+    # def test_dfs():
+    #     g = make_graph()
+    #     assert list(dfs(graph=g, source=1)) == [1, 4, 5, 3, 2, 6, 7]
+    return len(list(dfs(graph, source))) == len(graph)

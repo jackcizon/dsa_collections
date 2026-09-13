@@ -105,7 +105,7 @@ class Graph:
     def add_edge(self, u: Hashable, v: Hashable, **attrs: Any) -> None:
         """
         add edge u-v if not exists, and it will create 2 nodes, or update the edge if exists.
-        but the attrs maybe reset, for update attrs, use update_edge_attrs()
+        but the attrs maybe reset, for updating attrs, use update_edge_attrs()
 
         e.g.:
         G.add_edge(1, 3, (weight=7, capacity=15, length=342.7))
@@ -249,7 +249,7 @@ class Graph:
 
     @overload
     def edges(
-        self, need_attrs: Literal[True] = True
+            self, need_attrs: Literal[True] = True
     ) -> list[tuple[Hashable, Hashable, dict[Hashable, Any]]]:
         """get edges with edge attrs info"""
         ...
@@ -392,5 +392,47 @@ class Graph:
 class DGraph(Graph):
     """Directed Graph"""
 
-    # def is_directed(self) -> bool:
-    #     return True
+    def is_directed(self) -> bool:
+        return True
+
+    def add_edge(self, u: Hashable, v: Hashable, **attrs: Any) -> None:
+        """
+        add edge u-v if not exists, and it will create 2 nodes, or update the edge if exists.
+        but the attrs maybe reset, for updating attrs, use update_edge_attrs()
+
+        e.g.:
+        G.add_edge(1, 3, (weight=7, capacity=15, length=342.7))
+
+        _adj ={
+            1: {
+                2: {'weight': 5, 'label': 'road'},
+                3: {}
+            },
+            2: {
+                3: {'weight': 1}
+            }
+        }
+
+        :param u: from node
+        :param v: to node
+        :return: None
+        """
+        if u not in self._nodes:
+            # reset node and adj info
+            self._nodes[u] = {}
+            self._adj[u] = {}
+
+        if v not in self._nodes:
+            self._nodes[v] = {}
+            self._adj[v] = {}
+
+        # add edge
+        # if u, v first connect, {u: v: {}, ...}
+        u2v_attrs = self._adj[u].get(v, {})
+        u2v_attrs.update(attrs)
+        u2v_attrs.update({
+            'from': u,
+            'to': v
+        })
+        # update edges info
+        self._adj[u][v] = u2v_attrs
