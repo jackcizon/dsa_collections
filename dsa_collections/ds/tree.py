@@ -397,7 +397,7 @@ class BinarySearchTree(BinaryTree):
                     ||
                     flag = true
         """
-        q = deque[self._root]
+        q = deque([self._root])
         flag = False
 
         while q:
@@ -414,6 +414,23 @@ class BinarySearchTree(BinaryTree):
             q.append(node.right)
 
         return True
+
+    def nodes_with_2_children(self) -> tuple[int, list]:
+        result = []
+        q = deque([self._root])
+
+        while q:
+            node = q.popleft()
+
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+
+            if node.left and node.right:
+                result.append(node)
+
+        return len(result), result
 
 
 class AVLTree(BinaryTree):
