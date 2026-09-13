@@ -157,6 +157,24 @@ class BinaryTree:
 
         return False
 
+    def lca(self, x, y):
+        return self._lca(self._root, x, y)
+
+    def _lca(self, node: _TreeNode, x, y):
+        if node is None:
+            return None
+
+        if node.key == x or node.key == y:
+            return node
+
+        l = self._lca(node.left, x, y)
+        r = self._lca(node.right, x, y)
+
+        if l and r:
+            return node
+
+        return l if l else r
+
     def __iter__(self) -> Iterator:
         """inorder"""
         stack: list[BinaryTree._TreeNode] = []
@@ -469,6 +487,18 @@ class BinarySearchTree(BinaryTree):
         self._shift(parent=parent, deleted=deleted, child=successor)
         successor.left = deleted.left
         return True
+
+    def lca(self, x, y):
+        self._lca(self._root, x, y)
+
+    def _lca(self, node: _TreeNode, x, y):
+        while node:
+            if x < node.key and y < node.key:
+                node = node.left
+            elif x > node.key and y > node.key:
+                node = node.right
+            else:
+                return node
 
 
 class AVLTree(BinaryTree):
