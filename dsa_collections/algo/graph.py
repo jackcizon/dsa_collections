@@ -311,3 +311,21 @@ def topo_sort(dgraph: DGraph):
         return None
 
     return result
+
+
+def is_tree(graph: Graph):
+    if len(graph) == 0:
+        return True
+
+    # 树必然满足 |E| = |V| - 1
+    if graph.number_of_edges() != len(graph) - 1:
+        return False
+
+    # graph.nodes() => [1,2,3]
+    source = graph.nodes()[0]
+
+    # tests.algo.test_graph.test_dfs
+    # def test_dfs():
+    #     g = make_graph()
+    #     assert list(dfs(graph=g, source=1)) == [1, 4, 5, 3, 2, 6, 7]
+    return len(list(dfs(graph, source))) == len(graph)
