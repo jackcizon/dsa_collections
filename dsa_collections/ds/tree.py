@@ -139,6 +139,24 @@ class BinaryTree:
     def mirror(self):
         self._mirror(self._root)
 
+    def ancestors(self, x):
+        result = []
+        self._ancestors(self._root, x, result)
+        return result
+
+    def _ancestors(self, node: _TreeNode, x: int, result: list):
+        if node is None:
+            return False
+
+        if node.key == x:
+            return True
+
+        if self._ancestors(node.left, x, result) or self._ancestors(node.right, x, result):
+            result.append(node)
+            return True
+
+        return False
+
     def __iter__(self) -> Iterator:
         """inorder"""
         stack: list[BinaryTree._TreeNode] = []
