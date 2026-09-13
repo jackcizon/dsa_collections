@@ -1,6 +1,6 @@
 from bisect import bisect_left
-from dataclasses import dataclass
 from collections import deque
+from dataclasses import dataclass
 from typing import Any, Optional, Iterator
 
 
@@ -75,6 +75,7 @@ class BinarySearchTree(BinaryTree):
         return node
 
     def __iter__(self) -> Iterator:
+        """inorder"""
         stack: list[BinarySearchTree._TreeNode] = []
         curr = self._root
 
@@ -114,7 +115,7 @@ class BinarySearchTree(BinaryTree):
                 stack.append(node.left)
             if node.right:
                 stack.append(node.right)
-
+        # root → right → left ===>>>> left → right → root
         return list(reversed(result))
 
     def inorder_recursion(self) -> list:
@@ -151,6 +152,19 @@ class BinarySearchTree(BinaryTree):
             # switch to right child tree
             curr = curr.right
 
+        return result
+
+    def level_traverse(self):
+        result = []
+        q = deque([self._root])
+
+        while q:
+            node = q.popleft()
+            result.append(node.data)
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
         return result
 
     def create_or_update(self, key: float, data: Any = None) -> None:
