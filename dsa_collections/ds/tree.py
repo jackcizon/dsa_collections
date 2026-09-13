@@ -381,6 +381,40 @@ class BinarySearchTree(BinaryTree):
 
         return height
 
+    def is_complete(self) -> bool:
+        r"""
+                   a
+                 /   \
+                /     \
+               b       c
+              / \     / \
+             d  None e  None
+             /\      /\
+             N N    N  N
+
+        a, b, c, d, None, e, None, N, N, N, N
+                    /\
+                    ||
+                    flag = true
+        """
+        q = deque[self._root]
+        flag = False
+
+        while q:
+            node = q.popleft()
+
+            if node is None:
+                flag = True
+                continue
+
+            if flag:
+                return False
+
+            q.append(node.left)
+            q.append(node.right)
+
+        return True
+
 
 class AVLTree(BinaryTree):
     """self balanced binary search tree"""
