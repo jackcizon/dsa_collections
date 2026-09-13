@@ -256,6 +256,9 @@ class BinaryTree:
         return result
 
     def level_traverse(self):
+        if self.is_empty():
+            return None
+
         result = []
         q = deque([self._root])
 
@@ -267,6 +270,26 @@ class BinaryTree:
             if node.right:
                 q.append(node.right)
         return result
+
+    def width(self):
+        max_width = 0
+        if self.is_empty():
+            return max_width
+
+        q = deque([self._root])
+        while q:
+            level_size = len(q)
+            max_width = max(max_width, level_size)
+
+            for _ in range(level_size):
+                node = q.popleft()
+
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+        return max_width
 
 
 class BinarySearchTree(BinaryTree):
