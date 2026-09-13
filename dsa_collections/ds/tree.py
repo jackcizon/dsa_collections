@@ -36,43 +36,88 @@ class BinaryTree:
                     q.append(node.right)
         return None
 
+    def height(self) -> int:
+        return self._height_recursion(self._root)
 
-class BinarySearchTree(BinaryTree):
-    @dataclass(repr=False)
-    class _TreeNode(BinaryTree._TreeNode):
-        left: Optional["BinarySearchTree._TreeNode"] = None
-        right: Optional["BinarySearchTree._TreeNode"] = None
+    def _height_recursion(self, node: Optional[_TreeNode]) -> int:
+        if node is None:
+            return 0
+        return 1 + max(self._height_recursion(node.left), self._height_recursion(node.right))
 
-    def __init__(self, key: float, data: Any = None) -> None:
-        # super().__init__(key=key, data=data)
-        # it will cause incompatible type "ds.tree.BinaryTree._TreeNode";
-        # expected "ds.tree.BinarySearchTree._TreeNode | None"
-        super().__init__(key, data)
-        self._root: Optional[BinarySearchTree._TreeNode] = self._TreeNode(key=key, data=data)
-
-    def min(self) -> Optional[_TreeNode]:
-        """return leftmost node"""
-        return self._min(self._root)
-
-    def _min(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+    def height_2(self) -> int:
+        height = 0
         if self.is_empty():
-            return None
+            return height
 
-        while node.left:
-            node = node.left
-        return node
+        q = deque([self._root])
+        while q:
+            level_size = len(q)
+            for _ in range(level_size):
+                node = q.popleft()
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
 
-    def max(self) -> Optional[_TreeNode]:
-        """return rightmost node"""
-        return self._max(self._root)
+            height += 1
 
-    def _max(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        return height
+
+    def is_complete(self) -> bool:
+        r"""
+                   a
+                 /   \
+                /     \
+               b       c
+              / \     / \
+             d  None e  None
+             /\      /\
+             N N    N  N
+
+        a, b, c, d, None, e, None, N, N, N, N
+                    /\
+                    ||
+                    flag = true
+        """
+        q = deque([self._root])
+        flag = False
+
+        while q:
+            node = q.popleft()
+
+            if node is None:
+                flag = True
+                continue
+
+            if flag:
+                return False
+
+            q.append(node.left)
+            q.append(node.right)
+
+        return True
+
+    def nodes_with_2_children(self) -> tuple[int, list]:
+        result = []
+        q = deque([self._root])
+
+        while q:
+            node = q.popleft()
+
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+
+            if node.left and node.right:
+                result.append(node)
+
+        return len(result), result
+
+    def _is_leaf(self, node: Optional[_TreeNode]) -> bool:
         if self.is_empty():
-            return None
-
-        while node.right:
-            node = node.right
-        return node
+            return False
+        return node.left is None and node.right is None
 
     def __iter__(self) -> Iterator:
         """inorder"""
@@ -137,7 +182,7 @@ class BinarySearchTree(BinaryTree):
         then switch to right child tree, loop
         """
         curr = self._root
-        stack: list[BinarySearchTree._TreeNode] = []
+        stack: list[BinaryTree._TreeNode] = []
         result = []
 
         # loop
@@ -166,6 +211,44 @@ class BinarySearchTree(BinaryTree):
             if node.right:
                 q.append(node.right)
         return result
+
+
+class BinarySearchTree(BinaryTree):
+    @dataclass(repr=False)
+    class _TreeNode(BinaryTree._TreeNode):
+        left: Optional["BinarySearchTree._TreeNode"] = None
+        right: Optional["BinarySearchTree._TreeNode"] = None
+
+    def __init__(self, key: float, data: Any = None) -> None:
+        # super().__init__(key=key, data=data)
+        # it will cause incompatible type "ds.tree.BinaryTree._TreeNode";
+        # expected "ds.tree.BinarySearchTree._TreeNode | None"
+        super().__init__(key, data)
+        self._root: Optional[BinarySearchTree._TreeNode] = self._TreeNode(key=key, data=data)
+
+    def min(self) -> Optional[_TreeNode]:
+        """return leftmost node"""
+        return self._min(self._root)
+
+    def _min(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        if self.is_empty():
+            return None
+
+        while node.left:
+            node = node.left
+        return node
+
+    def max(self) -> Optional[_TreeNode]:
+        """return rightmost node"""
+        return self._max(self._root)
+
+    def _max(self, node: Optional[_TreeNode]) -> Optional[_TreeNode]:
+        if self.is_empty():
+            return None
+
+        while node.right:
+            node = node.right
+        return node
 
     def create_or_update(self, key: float, data: Any = None) -> None:
         if self.is_empty():
@@ -273,11 +356,6 @@ class BinarySearchTree(BinaryTree):
             return self._min(curr.right)
         return ancestor_from_right
 
-    def _is_leaf(self, node: Optional[_TreeNode]) -> bool:
-        if self.is_empty():
-            return False
-        return node.left is None and node.right is None
-
     def _shift(
             self,
             parent: Optional[_TreeNode],
@@ -353,84 +431,6 @@ class BinarySearchTree(BinaryTree):
         self._shift(parent=parent, deleted=deleted, child=successor)
         successor.left = deleted.left
         return True
-
-    def height(self) -> int:
-        return self._height_recursion(self._root)
-
-    def _height_recursion(self, node: Optional[_TreeNode]) -> int:
-        if node is None:
-            return 0
-        return 1 + max(self._height_recursion(node.left), self._height_recursion(node.right))
-
-    def height_2(self) -> int:
-        height = 0
-        if self.is_empty():
-            return height
-
-        q = deque([self._root])
-        while q:
-            level_size = len(q)
-            for _ in range(level_size):
-                node = q.popleft()
-                if node.left:
-                    q.append(node.left)
-                if node.right:
-                    q.append(node.right)
-
-            height += 1
-
-        return height
-
-    def is_complete(self) -> bool:
-        r"""
-                   a
-                 /   \
-                /     \
-               b       c
-              / \     / \
-             d  None e  None
-             /\      /\
-             N N    N  N
-
-        a, b, c, d, None, e, None, N, N, N, N
-                    /\
-                    ||
-                    flag = true
-        """
-        q = deque([self._root])
-        flag = False
-
-        while q:
-            node = q.popleft()
-
-            if node is None:
-                flag = True
-                continue
-
-            if flag:
-                return False
-
-            q.append(node.left)
-            q.append(node.right)
-
-        return True
-
-    def nodes_with_2_children(self) -> tuple[int, list]:
-        result = []
-        q = deque([self._root])
-
-        while q:
-            node = q.popleft()
-
-            if node.left:
-                q.append(node.left)
-            if node.right:
-                q.append(node.right)
-
-            if node.left and node.right:
-                result.append(node)
-
-        return len(result), result
 
 
 class AVLTree(BinaryTree):
