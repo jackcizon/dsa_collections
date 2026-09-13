@@ -362,6 +362,25 @@ class BinarySearchTree(BinaryTree):
             return 0
         return 1 + max(self._height_recursion(node.left), self._height_recursion(node.right))
 
+    def height_2(self) -> int:
+        height = 0
+        if self.is_empty():
+            return height
+
+        q = deque([self._root])
+        while q:
+            level_size = len(q)
+            for _ in range(level_size):
+                node = q.popleft()
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+            height += 1
+
+        return height
+
 
 class AVLTree(BinaryTree):
     """self balanced binary search tree"""
