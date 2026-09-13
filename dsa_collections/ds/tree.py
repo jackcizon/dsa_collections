@@ -119,6 +119,26 @@ class BinaryTree:
             return False
         return node.left is None and node.right is None
 
+    def _mirror(self, node: Optional[_TreeNode]):
+        r"""
+          a               a
+         / \    ==>>     / \
+        b   c           c   b
+        :param node:
+        :return:
+        """
+        if node is None:
+            return
+
+        self._mirror(node.left)
+        self._mirror(node.right)
+        temp = node.left
+        node.left = node.right
+        node.right = temp
+
+    def mirror(self):
+        self._mirror(self._root)
+
     def __iter__(self) -> Iterator:
         """inorder"""
         stack: list[BinaryTree._TreeNode] = []
