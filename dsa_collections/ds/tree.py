@@ -310,6 +310,18 @@ class BinaryTree:
 
         return self._similar(a.left, b.left) and self._similar(a.right, b.right)
 
+    def wpl(self):
+        return self._wpl(self._root)
+
+    def _wpl(self, node: _TreeNode, depth: int = 0):
+        if node is None:
+            return 0
+
+        if self._is_leaf(node):
+            return depth * node.key  # 没设置weight,用key代替
+
+        return self._wpl(node.left, depth + 1) + self._wpl(node.right, depth + 1)
+
 
 class BinarySearchTree(BinaryTree):
     @dataclass(repr=False)
